@@ -1,0 +1,11 @@
+mkdir Release
+cd Release
+
+g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/utils/bigint.d" -MT"src/utils/bigint.o" -o "src/utils/bigint.o" "../src/utils/bigint.cpp"
+g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/utils/utility.d" -MT"src/utils/utility.o" -o "src/utils/utility.o" "../src/utils/utility.cpp"
+g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/tea/xtea.d" -MT"src/tea/xtea.o" -o "src/tea/xtea.o" "../src/tea/xtea.cpp"
+g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/aes.d" -MT"src/aes.o" -o "src/aes.o" "../src/aes.cpp"
+g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/base58.d" -MT"src/base58.o" -o "src/base58.o" "../src/base58.cpp"
+g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/base64.d" -MT"src/base64.o" -o "src/base64.o" "../src/base64.cpp"
+g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/rsa.d" -MT"src/rsa.o" -o "src/rsa.o" "../src/rsa.cpp"
+g++ -fPIC -shared -o "libcrypt.so"  ./src/utils/bigint.o ./src/utils/utility.o  ./src/tea/xtea.o  ./src/aes.o ./src/base58.o ./src/base64.o ./src/rsa.o  
