@@ -2,7 +2,6 @@
 #define _Included_CRYPT_TYPEDEFINE
 
 #define null 0
-typedef char                byte;
 typedef unsigned char       ubyte;
 typedef unsigned short      ushort;
 typedef unsigned int        uint;
