@@ -172,7 +172,7 @@ uint AES::decrypt(ubyte* data, uint len, ubyte* result) {
         state[3] = isbox[(ubyte)(t[3])] ^ ((isbox[(ubyte)(t[2] >> 8)]) << 8) ^ ((isbox[(ubyte)(t[1] >> 16)]) << 16) ^ ((isbox[(ubyte)(t[0] >> 24)]) << 24) ^ dw[3];
     }
 
-    return Utility::readIntFromBytes(result + (len - 4), 2);
+    return Utility::readIntFromBytes<uint>(result + (len - 4), 2);
 }
 
 AES128::AES128(ubyte* key, uint len) : AES(4, 4, 10, key, len) {

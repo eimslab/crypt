@@ -106,7 +106,7 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent) {
 RSAKeyInfo RSA::decodeKey(string const& key) {
     ubyte* buffer = new ubyte[key.size()];
     int size = crypt::base64::Base64::decode(key, buffer);
-    int m_len = Utility::readIntFromBytes(buffer, 2);
+    int m_len = Utility::readIntFromBytes<int>(buffer, 2);
 
     ubyte* m_bytes = new ubyte[m_len];
     for (int i = 0; i < m_len; i++) {

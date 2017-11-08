@@ -32,8 +32,8 @@ uint XTEA::encrypt(ubyte* data, uint len, ubyte* result) {
     uint output_len = padding(data, len, result);
 
     for (uint i = 0; i < (output_len + 4) / 8; i++) {
-        int v0 = Utility::readIntFromBytes(result + (i * 8));
-        int v1 = Utility::readIntFromBytes(result + (i * 8 + 4));
+        int v0 = Utility::readIntFromBytes<int>(result + (i * 8));
+        int v1 = Utility::readIntFromBytes<int>(result + (i * 8 + 4));
 
         int sum = 0;
 
@@ -43,8 +43,8 @@ uint XTEA::encrypt(ubyte* data, uint len, ubyte* result) {
             v1 += ((v0 << 4 ^ (int)((uint)v0 >> 5)) + v0) ^ (sum + m_key[(int)((uint)sum >> 11) & 3]);
         }
 
-        Utility::writeIntToBytes(v0, result + (i * 8));
-        Utility::writeIntToBytes(v1, result + (i * 8 + 4));
+        Utility::writeIntToBytes<int>(v0, result + (i * 8));
+        Utility::writeIntToBytes<int>(v1, result + (i * 8 + 4));
     }
 
     return output_len;
@@ -58,8 +58,8 @@ uint XTEA::decrypt(ubyte* data, uint len, ubyte* result) {
         result[i] = data[i];
 
     for (uint i = 0; i < len / 8; i++) {
-        int v0 = Utility::readIntFromBytes(result + (i * 8));
-        int v1 = Utility::readIntFromBytes(result + (i * 8 + 4));
+        int v0 = Utility::readIntFromBytes<int>(result + (i * 8));
+        int v1 = Utility::readIntFromBytes<int>(result + (i * 8 + 4));
 
         int sum = (int)((uint)DELTA * (uint)m_rounds);
 
@@ -73,7 +73,7 @@ uint XTEA::decrypt(ubyte* data, uint len, ubyte* result) {
         Utility::writeIntToBytes(v1, result + (i * 8 + 4));
     }
 
-    return Utility::readIntFromBytes(result + (len - 4), 2);
+    return Utility::readIntFromBytes<int>(result + (len - 4), 2);
 }
 
 }
