@@ -1,4 +1,7 @@
 mkdir Release
+mkdir Release/src
+mkdir Release/src/utils
+mkdir Release/src/tea
 cd Release
 
 g++ -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/utils/bigint.d" -MT"src/utils/bigint.o" -o "src/utils/bigint.o" "../src/utils/bigint.cpp"
@@ -7,4 +10,4 @@ g++ -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/aes.d" -MT"src/aes.o" -o "s
 g++ -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/base58.d" -MT"src/base58.o" -o "src/base58.o" "../src/base58.cpp"
 g++ -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/base64.d" -MT"src/base64.o" -o "src/base64.o" "../src/base64.cpp"
 g++ -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/rsa.d" -MT"src/rsa.o" -o "src/rsa.o" "../src/rsa.cpp"
-g++ -dynamiclib -o "libcrypt.dylib"  ./src/utils/bigint.o ./src/utils/utility.o  ./src/tea/xtea.o  ./src/aes.o ./src/base58.o ./src/base64.o ./src/rsa.o ./src/test.o   
+g++ -dynamiclib -o "libcrypt.dylib"  ./src/utils/bigint.o  ./src/tea/xtea.o  ./src/aes.o ./src/base58.o ./src/base64.o ./src/rsa.o
