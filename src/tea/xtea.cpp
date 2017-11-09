@@ -22,7 +22,7 @@ uint XTEA::padding(ubyte* data, uint len, ubyte* output) {
     for (uint i = len; i < output_len; i++)
         output[i] = 0;
 
-    Utility::writeIntToBytes<uint>(len, output + output_len, 2);
+    Utility::writeIntToBytes<uint>(len, output + output_len, ENDIAN_BIG);
 
     return output_len + 4;
 }
@@ -73,7 +73,7 @@ uint XTEA::decrypt(ubyte* data, uint len, ubyte* result) {
         Utility::writeIntToBytes<int>(v1, result + (i * 8 + 4));
     }
 
-    return Utility::readIntFromBytes<uint>(result + (len - 4), 2);
+    return Utility::readIntFromBytes<uint>(result + (len - 4), ENDIAN_BIG);
 }
 
 }

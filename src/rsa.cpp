@@ -87,7 +87,7 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent) {
     exponent.getBytes(e_bytes);
 
     ubyte* buffer = new ubyte[4 + m_len + e_len];
-    Utility::writeIntToBytes<uint>(m_len, buffer, 2);
+    Utility::writeIntToBytes<uint>(m_len, buffer, ENDIAN_BIG);
 
     for (uint i = 0; i < m_len; i++) {
         buffer[i + 4] = m_bytes[i];
@@ -106,7 +106,7 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent) {
 RSAKeyInfo RSA::decodeKey(string const& key) {
     ubyte* buffer = new ubyte[key.size()];
     uint size = crypt::base64::Base64::decode(key, buffer);
-    uint m_len = Utility::readIntFromBytes<uint>(buffer, 2);
+    uint m_len = Utility::readIntFromBytes<uint>(buffer, ENDIAN_BIG);
 
     ubyte* m_bytes = new ubyte[m_len];
     for (uint i = 0; i < m_len; i++) {

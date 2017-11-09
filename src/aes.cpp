@@ -26,7 +26,7 @@ uint AES::padding(ubyte* input, uint len, ubyte* output) {
     for (uint i = len; i < output_len; i++)
         output[i] = 0;
 
-    Utility::writeIntToBytes<uint>(len, output + output_len, 2);
+    Utility::writeIntToBytes<uint>(len, output + output_len, ENDIAN_BIG);
 
     return output_len + 4;
 }
@@ -171,7 +171,7 @@ uint AES::decrypt(ubyte* data, uint len, ubyte* result) {
         state[3] = isbox[(ubyte)(t[3])] ^ ((isbox[(ubyte)(t[2] >> 8)]) << 8) ^ ((isbox[(ubyte)(t[1] >> 16)]) << 16) ^ ((isbox[(ubyte)(t[0] >> 24)]) << 24) ^ dw[3];
     }
 
-    return Utility::readIntFromBytes<uint>(result + (len - 4), 2);
+    return Utility::readIntFromBytes<uint>(result + (len - 4), ENDIAN_BIG);
 }
 
 AES128::AES128(ubyte* key, uint len) : AES(4, 4, 10, key, len) {

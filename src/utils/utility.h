@@ -6,18 +6,16 @@
 namespace crypt {
 namespace utils {
 
+enum Endian {
+    ENDIAN_LITTLE = __ORDER_LITTLE_ENDIAN__,
+    ENDIAN_BIG    = __ORDER_BIG_ENDIAN__
+};
+
 class Utility {
 public:
     template <typename T>
-    static void writeIntToBytes(T value, ubyte* buffer, int endian = 0) {
-        if (endian < 1 || endian > 2) {
-            if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-                endian = 1;
-            else
-                endian = 2;
-        }
-
-        if (endian == 1) {
+    static void writeIntToBytes(T value, ubyte* buffer, Endian endianness = ENDIAN_LITTLE) {
+        if (endianness == ENDIAN_LITTLE) {
             buffer[0] = (ubyte)(value);
             buffer[1] = (ubyte)(value >> 8);
             buffer[2] = (ubyte)(value >> 16);
@@ -31,30 +29,16 @@ public:
     }
 
     template <typename T>
-    static T readIntFromBytes(ubyte* buffer, int endian = 0) {
-        if (endian < 1 || endian > 2) {
-            if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-                endian = 1;
-            else
-                endian = 2;
-        }
-
-        if (endian == 1)
+    static T readIntFromBytes(ubyte* buffer, Endian endianness = ENDIAN_LITTLE) {
+        if (endianness == ENDIAN_LITTLE)
             return (T)(buffer[0] | buffer[1] << 8 | buffer[2] << 16 | buffer[3] << 24);
         else
             return (T)(buffer[0] << 24 | buffer[1] << 16 | buffer[2] << 8 | buffer[3]);
     }
 
     template <typename T>
-    static void writeShortToBytes(T value, ubyte* buffer, int endian = 0) {
-        if (endian < 1 || endian > 2) {
-            if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-                endian = 1;
-            else
-                endian = 2;
-        }
-
-        if (endian == 1) {
+    static void writeShortToBytes(T value, ubyte* buffer, Endian endianness = ENDIAN_LITTLE) {
+        if (endianness == ENDIAN_LITTLE) {
             buffer[0] = (ubyte)(value);
             buffer[1] = (ubyte)(value >> 8);
         } else {
@@ -64,15 +48,8 @@ public:
     }
 
     template <typename T>
-    static T readShortFromBytes(ubyte* buffer, int endian = 0) {
-        if (endian < 1 || endian > 2) {
-            if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-                endian = 1;
-            else
-                endian = 2;
-        }
-
-        if (endian == 1)
+    static T readShortFromBytes(ubyte* buffer, Endian endianness = ENDIAN_LITTLE) {
+        if (endianness == ENDIAN_LITTLE)
             return (T)(buffer[0] | buffer[1] << 8);
         else
             return (T)(buffer[0] << 8 | buffer[1]);
