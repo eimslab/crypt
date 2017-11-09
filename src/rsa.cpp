@@ -89,11 +89,11 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent) {
     ubyte* buffer = new ubyte[4 + m_len + e_len];
     Utility::writeIntToBytes<uint>(m_len, buffer, 2);
 
-    for (int i = 0; i < m_len; i++) {
+    for (uint i = 0; i < m_len; i++) {
         buffer[i + 4] = m_bytes[i];
     }
 
-    for (int i = 0; i < e_len; i++) {
+    for (uint i = 0; i < e_len; i++) {
         buffer[i + 4 + m_len] = e_bytes[i];
     }
 
@@ -109,7 +109,7 @@ RSAKeyInfo RSA::decodeKey(string const& key) {
     uint m_len = Utility::readIntFromBytes<uint>(buffer, 2);
 
     ubyte* m_bytes = new ubyte[m_len];
-    for (int i = 0; i < m_len; i++) {
+    for (uint i = 0; i < m_len; i++) {
         m_bytes[i] = buffer[i + 4];
     }
 
