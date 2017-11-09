@@ -78,16 +78,16 @@ RSAKeyPair RSA::generateKeyPair(uint bitLength = 1024) {
 }
 
 string RSA::encodeKey(BigInt modulus, BigInt exponent) {
-    int m_len = modulus.dataLength << 2;
+    uint m_len = modulus.dataLength << 2;
     ubyte* m_bytes = new ubyte[m_len];
     modulus.getBytes(m_bytes);
 
-    int e_len = exponent.dataLength << 2;
+    uint e_len = exponent.dataLength << 2;
     ubyte* e_bytes = new ubyte[e_len];
     exponent.getBytes(e_bytes);
 
     ubyte* buffer = new ubyte[4 + m_len + e_len];
-    Utility::writeIntToBytes(m_len, buffer, 2);
+    Utility::writeIntToBytes<uint>(m_len, buffer, 2);
 
     for (int i = 0; i < m_len; i++) {
         buffer[i + 4] = m_bytes[i];
@@ -105,8 +105,8 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent) {
 
 RSAKeyInfo RSA::decodeKey(string const& key) {
     ubyte* buffer = new ubyte[key.size()];
-    int size = crypt::base64::Base64::decode(key, buffer);
-    int m_len = Utility::readIntFromBytes<int>(buffer, 2);
+    uint size = crypt::base64::Base64::decode(key, buffer);
+    uint m_len = Utility::readIntFromBytes<uint>(buffer, 2);
 
     ubyte* m_bytes = new ubyte[m_len];
     for (int i = 0; i < m_len; i++) {
@@ -114,7 +114,7 @@ RSAKeyInfo RSA::decodeKey(string const& key) {
     }
 
     ubyte* e_bytes = new ubyte[size - 4 - m_len];
-    for (int i = 0; i < size - 4 - m_len; i++) {
+    for (uint i = 0; i < size - 4 - m_len; i++) {
         e_bytes[i] = buffer[i + 4 + m_len];
     }
 

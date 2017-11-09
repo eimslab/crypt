@@ -26,7 +26,7 @@ uint AES::padding(ubyte* input, uint len, ubyte* output) {
     for (uint i = len; i < output_len; i++)
         output[i] = 0;
 
-    Utility::writeIntToBytes(len, output + output_len, 2);
+    Utility::writeIntToBytes<uint>(len, output + output_len, 2);
 
     return output_len + 4;
 }
@@ -153,8 +153,7 @@ uint AES::decrypt(ubyte* data, uint len, ubyte* result) {
             t[i] = state[i];
         }
 
-        for (int round = Nr - 1; round > 0; --round)
-        {
+        for (int round = Nr - 1; round > 0; --round) {
             // InvSubBytes, InvShiftRows and InvMixColumns combined
             state[0] = it[(ubyte)(t[0])] ^ rotate(1, it[(ubyte)(t[3] >> 8)]) ^ rotate(2, it[(ubyte)(t[2] >> 16)]) ^ rotate(3, it[(ubyte)(t[1] >> 24)]) ^ dw[round * Nb];
             state[1] = it[(ubyte)(t[1])] ^ rotate(1, it[(ubyte)(t[0] >> 8)]) ^ rotate(2, it[(ubyte)(t[3] >> 16)]) ^ rotate(3, it[(ubyte)(t[2] >> 24)]) ^ dw[round * Nb + 1];
@@ -210,62 +209,3 @@ uint AES256::decrypt(ubyte* data, uint len, ubyte* result) {
 
 }
 }
-
-
-
-
-//
-//class AESUtils
-//{
-//    public static ubyte[] encrypt(alias T = AES128)(in ubyte[] buffer, string key)
-//    {
-//        return encrypt_decrypt!(T, "encrypt")(buffer, key);
-//    }
-//
-//    public static ubyte[] decrypt(alias T = AES128)(in ubyte[] buffer, string key)
-//    {
-//        return encrypt_decrypt!(T, "decrypt")(buffer, key);
-//    }
-//
-//    private static ubyte[] encrypt_decrypt(alias T1 = AES128, string T2)(in ubyte[] buffer, string key)
-//    {
-//        ubyte[] bkey = cast(ubyte[])key;
-//
-//        T1 aes = new T1(bkey);
-//
-//        if (T2 == "encrypt")
-//        {
-//            return aes.encrypt(buffer);
-//        }
-//        else
-//        {
-//            return aes.decrypt(buffer);
-//        }
-//    }
-//}
-//
-//unittest
-//{
-//    auto key     = cast(ubyte[]) x"000102030405060708090a0b0c0d0e0f";
-//    auto message = cast(ubyte[]) x"00112233445566778899aabbccddeeff";
-//    auto cipher  = cast(ubyte[]) x"69c4e0d86a7b0430d8cdb78070b4c55a";
-//
-//    auto aes = new AES128(key);
-//
-//    ubyte[] buffer = aes.encrypt(message);
-//    assert(buffer == cipher);
-//
-//    buffer = aes.decrypt(buffer);
-//    assert(buffer == message);
-//}
-//
-//unittest
-//{
-//    string key = "12341234123412341234123412341234";    // length = 24;
-//    ubyte[] message = cast(ubyte[])"123412341234123412341234123412341";
-//
-//    ubyte[] buffer = AESUtils.encrypt!AES128(message, key);
-//    buffer = AESUtils.decrypt!AES128(buffer, key);
-//
-//    assert(message == buffer);
-//}
