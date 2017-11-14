@@ -9,9 +9,9 @@ using namespace crypt::base58;
 using namespace crypt::tea::xtea;
 using namespace crypt::aes;
 
-int main()
-{
-}
+//int main()
+//{
+//}
 
 //int main_aes()
 //{
