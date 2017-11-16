@@ -52,7 +52,7 @@ uint XTEA::encrypt(ubyte* data, uint len, ubyte* result) {
 
 // Decrypt given ubyte array (length to be crypted must be 8 ubyte aligned)
 uint XTEA::decrypt(ubyte* data, uint len, ubyte* result) {
-    assert(len % 8 == 0);
+    assert(len > 0 && len % 8 == 0);
 
     for (uint i = 0; i < len; i++)
         result[i] = data[i];
@@ -73,7 +73,7 @@ uint XTEA::decrypt(ubyte* data, uint len, ubyte* result) {
         Utility::writeIntToBytes<int>(v1, result + (i * 8 + 4));
     }
 
-    return Utility::readIntFromBytes<uint>(result + (len - 4), ENDIAN_BIG);
+    return Utility::readIntFromBytes<uint>(result + (int)(len - 4), ENDIAN_BIG);
 }
 
 }
