@@ -114,7 +114,7 @@ RSAKeyInfo RSA::decodeKey(string const& key) {
     }
 
     ubyte* e_bytes = new ubyte[(int)(size - 4 - m_len)];
-    for (uint i = 0; i < (int)(size - 4 - m_len); i++) {
+    for (int i = 0; i < (int)(size - 4 - m_len); i++) {
         e_bytes[i] = buffer[i + 4 + m_len];
     }
 
@@ -168,7 +168,7 @@ uint RSA::encrypt(RSAKeyInfo key, ubyte* data, uint len, ubyte* result) {
         bi.getBytes(block);
 
         if (block_len < keySize) {
-            for (uint i = 0; i < (int)(keySize - block_len); i++) {
+            for (int i = 0; i < (int)(keySize - block_len); i++) {
                 result[ret_pos++] = 0x00;
             }
         }
