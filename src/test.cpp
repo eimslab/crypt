@@ -13,32 +13,32 @@ using namespace crypt::aes;
 //{
 //}
 
-//int main_aes()
-//{
-//    ubyte key[] = "123456789012345678901234";
-//    AES128 aes(key, 24);
-//
-//    ubyte data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
-//
-//    ubyte* en = new ubyte[16 + 20];
-//    int len = aes.encrypt(data, 16, en);
-//
-//    for (int i = 0; i < len; i ++)
-//    {
-//        cout << (int)en[i] << ", ";
-//    }
-//    cout << endl;
-//
-//    ubyte* de = new ubyte[len];
-//    len = aes.decrypt(en, len, de);
-//
-//    for (int i = 0; i < len; i ++)
-//    {
-//        cout << (int)de[i] << ", ";
-//    }
-//
-//    return 0;
-//}
+int main()
+{
+    ubyte key[] = "123456789012345678901234";
+    AES128 aes(key, 24);
+
+    ubyte data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+
+    ubyte* en = new ubyte[16 + 20];
+    int len = aes.encrypt(data, 16, en);
+
+    for (int i = 0; i < len; i ++)
+    {
+        cout << (int)en[i] << ", ";
+    }
+    cout << endl;
+
+    ubyte* de = new ubyte[len];
+    len = aes.decrypt(en, len, de);
+
+    for (int i = 0; i < len; i ++)
+    {
+        cout << (int)de[i] << ", ";
+    }
+
+    return 0;
+}
 
 //int main_xtea()
 //{
