@@ -2,10 +2,12 @@
 #define _Included_CRYPT_AES
 
 #include <cassert>
+#include <string>
 
 #include "utils/typedefine.h"
 #include "utils/utility.h"
 
+using namespace std;
 using namespace crypt::utils;
 
 namespace crypt {
