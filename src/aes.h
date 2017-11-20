@@ -175,7 +175,7 @@ static const uint it[] = {
                 0x81f3afca, 0x3ec468b9, 0x2c342438, 0x5f40a3c2, 0x72c31d16, 0x0c25e2bc, 0x8b493c28, 0x41950dff, 0x7101a839, 0xdeb30c08,
                 0x9ce4b4d8, 0x90c15664, 0x6184cb7b, 0x70b632d5, 0x745c6c48, 0x4257b8d0, };
 
-template <uint Nb, uint Nk, uint Nr>
+template<uint Nb, uint Nk, uint Nr>
 class AES {
 private:
     uint w[Nb * (Nr + 1)];
@@ -348,6 +348,27 @@ typedef AES<4, 4, 10> AES128;
 typedef AES<4, 6, 12> AES192;
 typedef AES<4, 8, 14> AES256;
 
+class AESUtils {
+public:
+    template<typename AES_X = AES128>
+    static uint encrypt(ubyte* data, uint len, string key, ubyte* result) {
+        return handle<AES_X, 1>(data, len, key, result);
+    }
+
+    template<class AES_X = AES128>
+    static uint decrypt(ubyte* data, uint len, string key, ubyte* result) {
+        return handle<AES_X, 2>(data, len, key, result);
+    }
+
+private:
+    template<class AES_X, int EorD>
+    static uint handle(ubyte* data, uint len, string key, ubyte* result) {
+        AES_X aes((ubyte*)key.c_str(), key.length());
+        return (EorD == 1) ? aes.encrypt(data, len, result) : aes.decrypt(data, len, result);
+    }
+};
+
 }
 }
+
 #endif
