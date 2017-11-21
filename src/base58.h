@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_BASE58
-#define _Included_CRYPT_BASE58
+#ifndef _Included_CRYPT_BASE58_H
+#define _Included_CRYPT_BASE58_H
 
 #include "utils/typedefine.h"
 #include "utils/bigint.h"

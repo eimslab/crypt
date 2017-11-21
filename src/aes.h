@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_AES
-#define _Included_CRYPT_AES
+#ifndef _Included_CRYPT_AES_H
+#define _Included_CRYPT_AES_H
 
 #include <cassert>
 #include <string>

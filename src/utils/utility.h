@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_UTILITY
-#define _Included_CRYPT_UTILITY
+#ifndef _Included_CRYPT_UTILITY_H
+#define _Included_CRYPT_UTILITY_H
 
 #include "typedefine.h"
 

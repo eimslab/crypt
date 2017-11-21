@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_BIGINT
-#define _Included_CRYPT_BIGINT
+#ifndef _Included_CRYPT_BIGINT_H
+#define _Included_CRYPT_BIGINT_H
 
 #include "typedefine.h"
 #include "random.h"

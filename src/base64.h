@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_BASE64
-#define _Included_CRYPT_BASE64
+#ifndef _Included_CRYPT_BASE64_H
+#define _Included_CRYPT_BASE64_H
 
 #include "utils/typedefine.h"
 

@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_XTEA
-#define _Included_CRYPT_XTEA
+#ifndef _Included_CRYPT_XTEA_H
+#define _Included_CRYPT_XTEA_H
 
 #include "../utils/typedefine.h"
 #include "../utils/utility.h"

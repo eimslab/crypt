@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_TYPEDEFINE
-#define _Included_CRYPT_TYPEDEFINE
+#ifndef _Included_CRYPT_TYPEDEFINE_H
+#define _Included_CRYPT_TYPEDEFINE_H
 
 #define null 0
 typedef unsigned char       ubyte;

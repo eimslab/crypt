@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_RANDOM
-#define _Included_CRYPT_RANDOM
+#ifndef _Included_CRYPT_RANDOM_H
+#define _Included_CRYPT_RANDOM_H
 
 #include <random>
 #include <limits>

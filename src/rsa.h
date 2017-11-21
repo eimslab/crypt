@@ -1,5 +1,5 @@
-#ifndef _Included_CRYPT_RSA
-#define _Included_CRYPT_RSA
+#ifndef _Included_CRYPT_RSA_H
+#define _Included_CRYPT_RSA_H
 
 #include "utils/typedefine.h"
 #include "utils/bigint.h"
