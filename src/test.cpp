@@ -1,13 +1,13 @@
-#include "rsa.h"
-#include "base58.h"
-#include "tea/xtea.h"
-#include "aes.h"
-#include <iostream>
-
-using namespace crypt::rsa;
-using namespace crypt::base58;
-using namespace crypt::tea::xtea;
-using namespace crypt::aes;
+//#include "rsa.h"
+//#include "base58.h"
+//#include "tea/xtea.h"
+//#include "aes.h"
+//#include <iostream>
+//
+//using namespace crypt::rsa;
+//using namespace crypt::base58;
+//using namespace crypt::tea::xtea;
+//using namespace crypt::aes;
 
 //int main()
 //{
