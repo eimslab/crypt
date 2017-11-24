@@ -1,5 +1,4 @@
-#ifndef _Included_CRYPT_RSA_H
-#define _Included_CRYPT_RSA_H
+#pragma once
 
 #include "utils/typedefine.h"
 #include "utils/bigint.h"
@@ -46,5 +45,3 @@ public:
 
 }
 }
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef _Included_CRYPT_MD5_H
-#define _Included_CRYPT_MD5_H
-
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -73,5 +71,3 @@ public:
 static MD5 MD5Utils;
 
 }
-
-#endif

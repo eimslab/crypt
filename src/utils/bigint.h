@@ -1,5 +1,4 @@
-#ifndef _Included_CRYPT_BIGINT_H
-#define _Included_CRYPT_BIGINT_H
+#pragma once
 
 #include "typedefine.h"
 #include "random.h"
@@ -734,5 +733,3 @@ private:
 
 }
 }
-
-#endif

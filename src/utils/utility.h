@@ -1,5 +1,4 @@
-#ifndef _Included_CRYPT_UTILITY_H
-#define _Included_CRYPT_UTILITY_H
+#pragma once
 
 #include "typedefine.h"
 
@@ -58,5 +57,3 @@ public:
 
 }
 }
-
-#endif

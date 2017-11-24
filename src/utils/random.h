@@ -1,5 +1,4 @@
-#ifndef _Included_CRYPT_RANDOM_H
-#define _Included_CRYPT_RANDOM_H
+#pragma once
 
 #include <random>
 #include <limits>
@@ -27,4 +26,3 @@ public:
 }
 }
 
-#endif

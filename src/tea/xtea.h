@@ -1,5 +1,4 @@
-#ifndef _Included_CRYPT_XTEA_H
-#define _Included_CRYPT_XTEA_H
+#pragma once
 
 #include "../utils/typedefine.h"
 #include "../utils/utility.h"
@@ -26,4 +25,3 @@ public:
 }
 }
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef _Included_CRYPT_BASE64_H
-#define _Included_CRYPT_BASE64_H
+#pragma once
 
 #include "utils/typedefine.h"
 
@@ -25,4 +24,3 @@ public:
 
 }
 }
-#endif

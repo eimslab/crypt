@@ -1,5 +1,4 @@
-#ifndef _Included_CRYPT_AES_H
-#define _Included_CRYPT_AES_H
+#pragma once
 
 #include <cassert>
 #include <string>
@@ -372,5 +371,3 @@ private:
 
 }
 }
-
-#endif
