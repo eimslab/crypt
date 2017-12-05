@@ -3,7 +3,7 @@
 
 #include "bigint.h"
 
-namespace crypt {
+namespace cryption {
 namespace utils {
 
 BigInt::BigInt(void) {

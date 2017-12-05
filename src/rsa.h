@@ -1,13 +1,13 @@
 #pragma once
 
-#include "utils/typedefine.h"
+#include "utils/types.h"
 #include "utils/bigint.h"
 #include "utils/random.h"
 
 using namespace std;
-using namespace crypt::utils;
+using namespace cryption::utils;
 
-namespace crypt {
+namespace cryption {
 namespace rsa {
 
 struct RSAKeyPair {

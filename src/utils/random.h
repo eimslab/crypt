@@ -3,11 +3,11 @@
 #include <random>
 #include <limits>
 
-#include "typedefine.h"
+#include "types.h"
 
 using namespace std;
 
-namespace crypt {
+namespace cryption {
 namespace utils {
 
 class Random {

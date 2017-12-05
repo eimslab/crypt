@@ -2,7 +2,7 @@
 
 #include "base64.h"
 
-namespace crypt {
+namespace cryption {
 namespace base64 {
 
 string Base64::encode(ubyte* data, uint len) {

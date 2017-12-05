@@ -1,9 +1,9 @@
 #include <cassert>
 #include "xtea.h"
 
-using namespace crypt::utils;
+using namespace cryption::utils;
 
-namespace crypt {
+namespace cryption {
 namespace tea {
 namespace xtea {
 

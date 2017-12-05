@@ -3,7 +3,7 @@
 
 #include "base58.h"
 
-namespace crypt {
+namespace cryption {
 namespace base58 {
 
 void Base58::init(int* INDEXES, char* ALPHABET) {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "typedefine.h"
+#include "types.h"
 
-namespace crypt {
+namespace cryption {
 namespace utils {
 
 enum Endian {

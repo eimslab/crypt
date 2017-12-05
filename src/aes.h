@@ -3,13 +3,13 @@
 #include <cassert>
 #include <string>
 
-#include "utils/typedefine.h"
+#include "utils/types.h"
 #include "utils/utility.h"
 
 using namespace std;
-using namespace crypt::utils;
+using namespace cryption::utils;
 
-namespace crypt {
+namespace cryption {
 namespace aes {
 
 static const ubyte sbox[] = { 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76, 0xca, 0x82, 0xc9, 0x7d,

@@ -5,7 +5,7 @@
 #include "utils/utility.h"
 #include "base64.h"
 
-using namespace crypt::rsa;
+using namespace cryption::rsa;
 
 #ifdef _WIN32
 
@@ -56,7 +56,7 @@ uint rsaKeyGenerate(uint bitLength, char* result) {
     return key.length();
 }
 
-namespace crypt {
+namespace cryption {
 namespace rsa {
 
 Random rnd;
@@ -97,7 +97,7 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent) {
         buffer[i + 4 + m_len] = e_bytes[i];
     }
 
-    string ret = crypt::base64::Base64::encode(buffer, 4 + m_len + e_len);
+    string ret = cryption::base64::Base64::encode(buffer, 4 + m_len + e_len);
     delete[] buffer;
 
     return ret;
@@ -105,7 +105,7 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent) {
 
 RSAKeyInfo RSA::decodeKey(string const& key) {
     ubyte* buffer = new ubyte[key.size()];
-    uint size = crypt::base64::Base64::decode(key, buffer);
+    uint size = cryption::base64::Base64::decode(key, buffer);
     uint m_len = Utility::readIntFromBytes<uint>(buffer, ENDIAN_BIG);
 
     ubyte* m_bytes = new ubyte[m_len];

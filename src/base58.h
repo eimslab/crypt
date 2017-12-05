@@ -1,12 +1,12 @@
 #pragma once
 
-#include "utils/typedefine.h"
+#include "utils/types.h"
 #include "utils/bigint.h"
 
 using namespace std;
-using namespace crypt::utils;
+using namespace cryption::utils;
 
-namespace crypt {
+namespace cryption {
 namespace base58 {
 
 class Base58 {

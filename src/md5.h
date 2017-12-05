@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace crypt {
+namespace cryption {
 
 class MD5
 {

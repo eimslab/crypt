@@ -1,10 +1,10 @@
 #pragma once
 
-#include "utils/typedefine.h"
+#include "utils/types.h"
 
 using namespace std;
 
-namespace crypt {
+namespace cryption {
 namespace base64 {
 
 static const string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

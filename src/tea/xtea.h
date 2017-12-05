@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../utils/typedefine.h"
+#include "../utils/types.h"
 #include "../utils/utility.h"
 
-namespace crypt {
+namespace cryption {
 namespace tea {
 namespace xtea {
 

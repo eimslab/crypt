@@ -1,9 +1,9 @@
 #pragma once
 
-#include "typedefine.h"
+#include "types.h"
 #include "random.h"
 
-namespace crypt {
+namespace cryption {
 namespace utils {
 
 const int maxLength = 200;	// 200*32 = 6400 bits

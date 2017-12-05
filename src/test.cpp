@@ -4,10 +4,10 @@
 //#include "aes.h"
 //#include <iostream>
 //
-//using namespace crypt::rsa;
-//using namespace crypt::base58;
-//using namespace crypt::tea::xtea;
-//using namespace crypt::aes;
+//using namespace cryption::rsa;
+//using namespace cryption::base58;
+//using namespace cryption::tea::xtea;
+//using namespace cryption::aes;
 
 //int main()
 //{
