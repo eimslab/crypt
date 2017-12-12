@@ -6,10 +6,13 @@
 using namespace std;
 using namespace cryption::utils;
 
-namespace cryption {
-namespace base58 {
+namespace cryption
+{
+namespace base58
+{
 
-class Base58 {
+class Base58
+{
 private:
     static void init(int*, char*);
     static BigInt decodeToBigInteger(string input);

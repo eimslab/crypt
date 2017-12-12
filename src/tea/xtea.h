@@ -3,11 +3,15 @@
 #include "../utils/types.h"
 #include "../utils/utility.h"
 
-namespace cryption {
-namespace tea {
-namespace xtea {
+namespace cryption
+{
+namespace tea
+{
+namespace xtea
+{
 
-class XTEA {
+class XTEA
+{
 private:
     int DELTA;      // XTEA delta constant
     int* m_key;     // Key - 4 integer

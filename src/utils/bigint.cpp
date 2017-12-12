@@ -3,139 +3,172 @@
 
 #include "bigint.h"
 
-namespace cryption {
-namespace utils {
+namespace cryption
+{
+namespace utils
+{
 
-BigInt::BigInt(void) {
+BigInt::BigInt(void)
+{
     init();
     dataLength = 1;
 }
 
-BigInt::BigInt(uint64 value) {
+BigInt::BigInt(uint64 value)
+{
     init();
 
     dataLength = 0;
-    while (value != 0 && dataLength < maxLength) {
+    while (value != 0 && dataLength < maxLength)
+    {
         data[dataLength] = (uint) (value & 0xFFFFFFFF);
         value = value >> 32;
         dataLength++;
     }
 
-    if (dataLength == 0) {
+    if (dataLength == 0)
+    {
         dataLength = 1;
     }
 }
 
-BigInt::BigInt(const BigInt &bi) {
+BigInt::BigInt(const BigInt &bi)
+{
     init();
 
     dataLength = bi.dataLength;
 
-    for (int i = 0; i < dataLength; i++) {
+    for (int i = 0; i < dataLength; i++)
+    {
         data[i] = bi.data[i];
     }
 }
 
-BigInt::BigInt(const uint inData[], int length) {
+BigInt::BigInt(const uint inData[], int length)
+{
     init();
 
     dataLength = length;
 
-    if (dataLength > maxLength) {
+    if (dataLength > maxLength)
+    {
         dataLength = maxLength;
     }
 
-    for (int i = dataLength - 1, j = 0; i >= 0; i--, j++) {
+    for (int i = dataLength - 1, j = 0; i >= 0; i--, j++)
+    {
         data[j] = inData[i];
     }
 
-    while (dataLength > 1 && data[dataLength - 1] == 0) {
+    while (dataLength > 1 && data[dataLength - 1] == 0)
+    {
         dataLength--;
     }
 
 }
 
-BigInt::BigInt(const uint inData[], int length, bool direct) {
+BigInt::BigInt(const uint inData[], int length, bool direct)
+{
     init();
 
     dataLength = length;
 
-    if (dataLength > maxLength) {
+    if (dataLength > maxLength)
+    {
         dataLength = maxLength;
     }
 
-    if (direct) {
-        for (int i = 0; i < dataLength; i++) {
+    if (direct)
+    {
+        for (int i = 0; i < dataLength; i++)
+        {
             data[i] = inData[i];
         }
-    } else {
-        for (int i = dataLength - 1, j = 0; i >= 0; i--, j++) {
+    }
+    else
+    {
+        for (int i = dataLength - 1, j = 0; i >= 0; i--, j++)
+        {
             data[j] = inData[i];
         }
     }
 
-    while (dataLength > 1 && data[dataLength - 1] == 0) {
+    while (dataLength > 1 && data[dataLength - 1] == 0)
+    {
         dataLength--;
     }
 }
 
-BigInt::BigInt(const ubyte inData[], int length) {
+BigInt::BigInt(const ubyte inData[], int length)
+{
     init();
     dataLength = length >> 2;
 
     int leftOver = length & 0x3;
 
-    if (leftOver != 0) {        // length not multiples of 4
+    if (leftOver != 0)        // length not multiples of 4
+    {
         dataLength++;
     }
 
-    if (dataLength > maxLength) {
+    if (dataLength > maxLength)
+    {
         dataLength = maxLength;
         length = dataLength << 2;
     }
 
-    for (int i = length - 1, j = 0; i >= 3; i -= 4, j++) {
-        data[j] = (uint) (((uint) inData[i - 3] << 24)
-                + ((uint) inData[i - 2] << 16) + ((uint) inData[i - 1] << 8)
-                + inData[i]);
+    for (int i = length - 1, j = 0; i >= 3; i -= 4, j++)
+    {
+        data[j] = (uint) (((uint) inData[i - 3] << 24) + ((uint) inData[i - 2] << 16) + ((uint) inData[i - 1] << 8) + inData[i]);
     }
 
-    if (leftOver == 1) {
+    if (leftOver == 1)
+    {
         data[dataLength - 1] = (uint) inData[0];
-    } else if (leftOver == 2) {
+    }
+    else if (leftOver == 2)
+    {
         data[dataLength - 1] = (uint) (((uint) inData[0] << 8) + inData[1]);
-    } else if (leftOver == 3) {
-        data[dataLength - 1] = (uint) (((uint) inData[0] << 16)
-                + ((uint) inData[1] << 8) + inData[2]);
+    }
+    else if (leftOver == 3)
+    {
+        data[dataLength - 1] = (uint) (((uint) inData[0] << 16) + ((uint) inData[1] << 8) + inData[2]);
     }
 
-    while (dataLength > 1 && data[dataLength - 1] == 0) {
+    while (dataLength > 1 && data[dataLength - 1] == 0)
+    {
         dataLength--;
     }
 }
 
-BigInt::~BigInt(void) {
+BigInt::~BigInt(void)
+{
 }
 
-void BigInt::init() {
+void BigInt::init()
+{
     dataLength = 0;
-    for (int i = 0; i < maxLength; i++) {
+    for (int i = 0; i < maxLength; i++)
+    {
         data[i] = 0u;
     }
 }
 
-BigInt operator +(const BigInt &bi1, const BigInt &bi2) {
+BigInt operator +(const BigInt &bi1, const BigInt &bi2)
+{
     BigInt result;
     result.dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
     int64 carry = 0;
-    for (int i = 0; i < result.dataLength; i++) {
+    for (int i = 0; i < result.dataLength; i++)
+    {
         int64 sum = (int64) bi1.data[i] + (int64) bi2.data[i] + carry;
         carry = sum >> 32;
         result.data[i] = (uint) (sum & 0xFFFFFFFF);
     }
 
-    if (carry != 0 && result.dataLength < maxLength) {
+    if (carry != 0 && result.dataLength < maxLength)
+    {
         result.data[result.dataLength] = (uint) (carry);
         result.dataLength++;
     }
@@ -143,22 +176,17 @@ BigInt operator +(const BigInt &bi1, const BigInt &bi2) {
     while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
         result.dataLength--;
 
-    // overflow
-    /*int lastPos = maxLength - 1;
-     if ((bi1.data[lastPos] & 0x80000000) == (bi2.data[lastPos] & 0x80000000) &&
-     (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000))
-     {
-     }*/
-
     return result;
 }
 
-BigInt operator ++(BigInt& bi) {
+BigInt operator ++(BigInt& bi)
+{
 
     int64 val, carry = 1;
     int index = 0;
 
-    while (carry != 0 && index < maxLength) {
+    while (carry != 0 && index < maxLength)
+    {
         val = (int64) (bi.data[index]);
         val++;
 
@@ -170,24 +198,24 @@ BigInt operator ++(BigInt& bi) {
 
     if (index > bi.dataLength)
         bi.dataLength = index;
-    else {
+    else
+    {
         while (bi.dataLength > 1 && bi.data[bi.dataLength - 1] == 0)
             bi.dataLength--;
     }
 
-    //int lastPos = maxLength - 1;
-
     return bi;
 }
 
-BigInt operator -(const BigInt& bi1, const BigInt& bi2) {
+BigInt operator -(const BigInt& bi1, const BigInt& bi2)
+{
     BigInt result;
 
-    result.dataLength =
-            (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+    result.dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
     int64 carryIn = 0;
-    for (int i = 0; i < result.dataLength; i++) {
+    for (int i = 0; i < result.dataLength; i++)
+    {
         int64 diff;
 
         diff = (int64) bi1.data[i] - (int64) bi2.data[i] - carryIn;
@@ -200,7 +228,8 @@ BigInt operator -(const BigInt& bi1, const BigInt& bi2) {
     }
 
     // roll over to negative
-    if (carryIn != 0) {
+    if (carryIn != 0)
+    {
         for (int i = result.dataLength; i < maxLength; i++)
             result.data[i] = 0xFFFFFFFF;
         result.dataLength = maxLength;
@@ -210,25 +239,17 @@ BigInt operator -(const BigInt& bi1, const BigInt& bi2) {
     while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
         result.dataLength--;
 
-    // overflow check
-    /*int lastPos = maxLength - 1;
-
-     if ((bi1.data[lastPos] & 0x80000000) != (bi2.data[lastPos] & 0x80000000) &&
-     (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000))
-     {
-     //throw (new ArithmeticException());
-     }
-     */
-
     return result;
 }
 
-BigInt operator --(BigInt &bi) {
+BigInt operator --(BigInt &bi)
+{
     int64 val;
     bool carryIn = true;
     int index = 0;
 
-    while (carryIn && index < maxLength) {
+    while (carryIn && index < maxLength)
+    {
         val = (int64) (bi.data[index]);
         val--;
 
@@ -246,18 +267,19 @@ BigInt operator --(BigInt &bi) {
     while (bi.dataLength > 1 && bi.data[bi.dataLength - 1] == 0)
         bi.dataLength--;
 
-    //nt lastPos = maxLength - 1;
-
     return bi;
 }
 
-BigInt operator -=(BigInt &bi1, const BigInt &bi2) {
+BigInt operator -=(BigInt &bi1, const BigInt &bi2)
+{
     bi1 = bi1 - bi2;
     return bi1;
 }
 
-BigInt operator -(const BigInt& bi1) {
-    if (bi1.dataLength == 1 && bi1.data[0] == 0) {
+BigInt operator -(const BigInt& bi1)
+{
+    if (bi1.dataLength == 1 && bi1.data[0] == 0)
+    {
         BigInt result;
         return result;
     }
@@ -265,14 +287,16 @@ BigInt operator -(const BigInt& bi1) {
     BigInt result(bi1);
 
     // 1's complement
-    for (int i = 0; i < maxLength; i++) {
+    for (int i = 0; i < maxLength; i++)
+    {
         result.data[i] = (uint) (~(bi1.data[i]));
     }
     // add one to result of 1's complement
     int64 val, carry = 1;
     int index = 0;
 
-    while (carry != 0 && index < maxLength) {
+    while (carry != 0 && index < maxLength)
+    {
         val = (int64) (result.data[index]);
         val++;
 
@@ -282,51 +306,51 @@ BigInt operator -(const BigInt& bi1) {
         index++;
     }
 
-    //Overflow in negation
-    /*if ((bi1.data[maxLength - 1] & 0x80000000) == (result.data[maxLength - 1] & 0x80000000))
-     {
-     }*/
-
     result.dataLength = maxLength;
 
-    while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0) {
+    while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
+    {
         result.dataLength--;
     }
 
     return result;
 }
 
-BigInt operator *(BigInt bi1, BigInt bi2) {
+BigInt operator *(BigInt bi1, BigInt bi2)
+{
     int lastPos = maxLength - 1;
     bool bi1Neg = false, bi2Neg = false;
 
-    if ((bi1.data[lastPos] & 0x80000000) != 0) {	// bi1 negative
+    if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
+    {
         bi1Neg = true;
         bi1 = -bi1;
     }
 
-    if ((bi2.data[lastPos] & 0x80000000) != 0) {    // bi2 negative
+    if ((bi2.data[lastPos] & 0x80000000) != 0)    // bi2 negative
+    {
         bi2Neg = true;
         bi2 = -bi2;
     }
 
     BigInt result;
 
-    for (int i = 0; i < bi1.dataLength; i++) {
+    for (int i = 0; i < bi1.dataLength; i++)
+    {
         if (bi1.data[i] == 0)
             continue;
 
         uint64 mcarry = 0;
-        for (int j = 0, k = i; j < bi2.dataLength; j++, k++) {
-            // k = i + j
-            uint64 val = ((uint64) bi1.data[i] * (uint64) bi2.data[j])
-                    + (uint64) result.data[k] + mcarry;
+        for (int j = 0, k = i; j < bi2.dataLength; j++, k++)
+        {
+            uint64 val = ((uint64) bi1.data[i] * (uint64) bi2.data[j]) + (uint64) result.data[k] + mcarry;
 
             result.data[k] = (uint) (val & 0xFFFFFFFF);
             mcarry = (val >> 32);
         }
 
-        if (mcarry != 0) {
+        if (mcarry != 0)
+        {
             result.data[i + bi2.dataLength] = (uint) mcarry;
         }
     }
@@ -339,16 +363,20 @@ BigInt operator *(BigInt bi1, BigInt bi2) {
         result.dataLength--;
 
     // overflow check (result is -ve)
-    if ((result.data[lastPos] & 0x80000000) != 0) {
-        if (bi1Neg != bi2Neg && result.data[lastPos] == 0x80000000) { // different sign
-        // handle the special case where multiplication produces
-        // a max negative number in 2's complement.
+    if ((result.data[lastPos] & 0x80000000) != 0)
+    {
+        if (bi1Neg != bi2Neg && result.data[lastPos] == 0x80000000) // different sign
+        {
+            // handle the special case where multiplication produces
+            // a max negative number in 2's complement.
 
             if (result.dataLength == 1)
                 return result;
-            else {
+            else
+            {
                 bool isMaxNeg = true;
-                for (int i = 0; i < result.dataLength - 1 && isMaxNeg; i++) {
+                for (int i = 0; i < result.dataLength - 1 && isMaxNeg; i++)
+                {
                     if (result.data[i] != 0)
                         isMaxNeg = false;
                 }
@@ -369,10 +397,12 @@ BigInt operator *(BigInt bi1, BigInt bi2) {
     return result;
 }
 
-BigInt operator <<(const BigInt &bi1, int offset) {
+BigInt operator <<(const BigInt &bi1, int offset)
+{
     BigInt result = BigInt(bi1);
 
-    if (offset == 0) {
+    if (offset == 0)
+    {
         return result;
     }
 
@@ -381,23 +411,26 @@ BigInt operator <<(const BigInt &bi1, int offset) {
     return result;
 }
 
-BigInt operator >>(const BigInt &bi1, int shiftVal) {
+BigInt operator >>(const BigInt &bi1, int shiftVal)
+{
     BigInt result(bi1);
 
-    if (shiftVal == 0) {
+    if (shiftVal == 0)
+    {
         return result;
     }
 
-    result.dataLength = BigInt::shiftRight(result.data, result.dataLength,
-            shiftVal);
+    result.dataLength = BigInt::shiftRight(result.data, result.dataLength, shiftVal);
 
     int i = 0;
-    if ((bi1.data[maxLength - 1] & 0x80000000) != 0) {	// negative
+    if ((bi1.data[maxLength - 1] & 0x80000000) != 0)    	// negative
+    {
         for (i = maxLength - 1; i >= result.dataLength; i--)
             result.data[i] = 0xFFFFFFFF;
 
         uint mask = 0x80000000;
-        for (i = 0; i < 32; i++) {
+        for (i = 0; i < 32; i++)
+        {
             if ((result.data[result.dataLength - 1] & mask) != 0)
                 break;
 
@@ -410,22 +443,27 @@ BigInt operator >>(const BigInt &bi1, int shiftVal) {
     return result;
 }
 
-int BigInt::shiftLeft(uint buffer[], int bufLen, int shiftVal) {
+int BigInt::shiftLeft(uint buffer[], int bufLen, int shiftVal)
+{
     int shiftAmount = 32;
 
     int index = bufLen;
 
-    while (index > 1 && buffer[index - 1] == 0) {
+    while (index > 1 && buffer[index - 1] == 0)
+    {
         index--;
     }
 
-    for (int count = shiftVal; count > 0;) {
-        if (count < shiftAmount) {
+    for (int count = shiftVal; count > 0;)
+    {
+        if (count < shiftAmount)
+        {
             shiftAmount = count;
         }
 
         uint64 carry = 0;
-        for (int i = 0; i < index; i++) {
+        for (int i = 0; i < index; i++)
+        {
             uint64 val = ((uint64) buffer[i]) << shiftAmount;
             val |= carry;
 
@@ -433,8 +471,10 @@ int BigInt::shiftLeft(uint buffer[], int bufLen, int shiftVal) {
             carry = val >> 32;
         }
 
-        if (carry != 0) {
-            if (index + 1 <= bufLen) {
+        if (carry != 0)
+        {
+            if (index + 1 <= bufLen)
+            {
                 buffer[index] = (uint) carry;
                 index++;
             }
@@ -445,21 +485,25 @@ int BigInt::shiftLeft(uint buffer[], int bufLen, int shiftVal) {
     return index;
 }
 
-int BigInt::shiftRight(uint buffer[], int bufLen, int shiftVal) {
+int BigInt::shiftRight(uint buffer[], int bufLen, int shiftVal)
+{
     int shiftAmount = 32;
     int invShift = 0;
 
     while (bufLen > 1 && buffer[bufLen - 1] == 0)
         bufLen--;
 
-    for (int count = shiftVal; count > 0;) {
-        if (count < shiftAmount) {
+    for (int count = shiftVal; count > 0;)
+    {
+        if (count < shiftAmount)
+        {
             shiftAmount = count;
             invShift = 32 - shiftAmount;
         }
 
         uint64 carry = 0;
-        for (int i = bufLen - 1; i >= 0; i--) {
+        for (int i = bufLen - 1; i >= 0; i--)
+        {
             uint64 val = ((uint64) buffer[i]) >> shiftAmount;
             val |= carry;
 
@@ -476,29 +520,36 @@ int BigInt::shiftRight(uint buffer[], int bufLen, int shiftVal) {
     return bufLen;
 }
 
-BigInt operator ~(const BigInt &bi) {
+BigInt operator ~(const BigInt &bi)
+{
     BigInt result(bi);
 
-    for (int i = 0; i < maxLength; i++) {
+    for (int i = 0; i < maxLength; i++)
+    {
         result.data[i] = (uint) (~(bi.data[i]));
     }
 
     result.dataLength = maxLength;
 
-    while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0) {
+    while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
+    {
         result.dataLength--;
     }
 
     return result;
 }
 
-bool operator ==(const BigInt &bi1, const BigInt &bi2) {
-    if (bi1.dataLength != bi2.dataLength) {
+bool operator ==(const BigInt &bi1, const BigInt &bi2)
+{
+    if (bi1.dataLength != bi2.dataLength)
+    {
         return false;
     }
 
-    for (int i = 0; i < bi1.dataLength; i++) {
-        if (bi1.data[i] != bi2.data[i]) {
+    for (int i = 0; i < bi1.dataLength; i++)
+    {
+        if (bi1.data[i] != bi2.data[i])
+        {
             return false;
         }
     }
@@ -506,13 +557,17 @@ bool operator ==(const BigInt &bi1, const BigInt &bi2) {
     return true;
 }
 
-bool operator !=(const BigInt &bi1, const BigInt &bi2) {
-    if (bi1.dataLength != bi2.dataLength) {
+bool operator !=(const BigInt &bi1, const BigInt &bi2)
+{
+    if (bi1.dataLength != bi2.dataLength)
+    {
         return true;
     }
 
-    for (int i = 0; i < bi1.dataLength; i++) {
-        if (bi1.data[i] != bi2.data[i]) {
+    for (int i = 0; i < bi1.dataLength; i++)
+    {
+        if (bi1.data[i] != bi2.data[i])
+        {
             return true;
         }
     }
@@ -520,7 +575,8 @@ bool operator !=(const BigInt &bi1, const BigInt &bi2) {
     return false;
 }
 
-bool operator >(const BigInt &bi1, const BigInt &bi2) {
+bool operator >(const BigInt &bi1, const BigInt &bi2)
+{
     int pos = maxLength - 1;
 
     // bi1 is negative, bi2 is positive
@@ -528,28 +584,19 @@ bool operator >(const BigInt &bi1, const BigInt &bi2) {
         return false;
 
     // bi1 is positive, bi2 is negative
-    else if ((bi1.data[pos] & 0x80000000) == 0
-            && (bi2.data[pos] & 0x80000000) != 0)
+    else if ((bi1.data[pos] & 0x80000000) == 0 && (bi2.data[pos] & 0x80000000) != 0)
         return true;
 
     // same sign
     int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
-    for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--)
-        ;
+    for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--);
 
-    if (pos >= 0) {
-        if (bi1.data[pos] > bi2.data[pos]) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    return false;
+    return ((pos >= 0) && (bi1.data[pos] > bi2.data[pos]));
 }
 
-bool operator <(const BigInt &bi1, const BigInt &bi2) {
+bool operator <(const BigInt &bi1, const BigInt &bi2)
+{
     int pos = maxLength - 1;
 
     // bi1 is negative, bi2 is positive
@@ -557,40 +604,34 @@ bool operator <(const BigInt &bi1, const BigInt &bi2) {
         return true;
 
     // bi1 is positive, bi2 is negative
-    else if ((bi1.data[pos] & 0x80000000) == 0
-            && (bi2.data[pos] & 0x80000000) != 0)
+    else if ((bi1.data[pos] & 0x80000000) == 0 && (bi2.data[pos] & 0x80000000) != 0)
         return false;
 
     // same sign
     int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
-    for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--)
-        ;
+    for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--);
 
-    if (pos >= 0) {
-        if (bi1.data[pos] < bi2.data[pos]) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    return false;
+    return ((pos >= 0) && (bi1.data[pos] < bi2.data[pos]));
 }
 
-bool operator >=(const BigInt &bi1, const BigInt &bi2) {
+bool operator >=(const BigInt &bi1, const BigInt &bi2)
+{
     return (bi1 == bi2 || bi1 > bi2);
 }
 
-bool operator <=(const BigInt &bi1, const BigInt &bi2) {
+bool operator <=(const BigInt &bi1, const BigInt &bi2)
+{
     return (bi1 == bi2 || bi1 < bi2);
 }
 
-void BigInt::multiByteDivide(BigInt bi1, BigInt bi2, BigInt &outQuotient, BigInt& outRemainder) {
+void BigInt::multiByteDivide(BigInt bi1, BigInt bi2, BigInt &outQuotient, BigInt& outRemainder)
+{
     int i = 0;
     uint result[maxLength];
 
-    for (i = 0; i < maxLength; i++) {
+    for (i = 0; i < maxLength; i++)
+    {
         result[i] = 0;
     }
 
@@ -598,7 +639,8 @@ void BigInt::multiByteDivide(BigInt bi1, BigInt bi2, BigInt &outQuotient, BigInt
 
     uint* remainder = new uint[remainderLen];
 
-    for (i = 0; i < remainderLen; i++) {
+    for (i = 0; i < remainderLen; i++)
+    {
         remainder[i] = 0;
     }
 
@@ -607,12 +649,14 @@ void BigInt::multiByteDivide(BigInt bi1, BigInt bi2, BigInt &outQuotient, BigInt
 
     int shift = 0, resultPos = 0;
 
-    while (mask != 0 && (val & mask) == 0) {
+    while (mask != 0 && (val & mask) == 0)
+    {
         shift++;
         mask >>= 1;
     }
 
-    for (i = 0; i < bi1.dataLength; i++) {
+    for (i = 0; i < bi1.dataLength; i++)
+    {
         remainder[i] = bi1.data[i];
     }
 
@@ -629,21 +673,25 @@ void BigInt::multiByteDivide(BigInt bi1, BigInt bi2, BigInt &outQuotient, BigInt
     int divisorLen = bi2.dataLength + 1;
     uint* dividendPart = new uint[divisorLen];
 
-    for (i = 0; i < divisorLen; i++) {
+    for (i = 0; i < divisorLen; i++)
+    {
         dividendPart[i] = 0;
     }
 
-    while (j > 0) {
+    while (j > 0)
+    {
         uint64 dividend = ((uint64) remainder[pos] << 32) + (uint64) remainder[pos - 1];
 
         uint64 q_hat = dividend / firstDivisorByte;
         uint64 r_hat = dividend % firstDivisorByte;
 
         bool done = false;
-        while (!done) {
+        while (!done)
+        {
             done = true;
 
-            if (q_hat == 0x100000000 || (q_hat * secondDivisorByte) > ((r_hat << 32) + remainder[pos - 2])) {
+            if (q_hat == 0x100000000 || (q_hat * secondDivisorByte) > ((r_hat << 32) + remainder[pos - 2]))
+            {
                 q_hat--;
                 r_hat += firstDivisorByte;
 
@@ -659,7 +707,8 @@ void BigInt::multiByteDivide(BigInt bi1, BigInt bi2, BigInt &outQuotient, BigInt
         BigInt kk(dividendPart, divisorLen);
         BigInt ss = bi2 * (int64) q_hat;
 
-        while (ss > kk) {
+        while (ss > kk)
+        {
             q_hat--;
             ss -= bi2;
         }
@@ -682,8 +731,7 @@ void BigInt::multiByteDivide(BigInt bi1, BigInt bi2, BigInt &outQuotient, BigInt
     for (; y < maxLength; y++)
         outQuotient.data[y] = 0;
 
-    while (outQuotient.dataLength > 1
-            && outQuotient.data[outQuotient.dataLength - 1] == 0)
+    while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
         outQuotient.dataLength--;
 
     if (outQuotient.dataLength == 0)
@@ -695,15 +743,18 @@ void BigInt::multiByteDivide(BigInt bi1, BigInt bi2, BigInt &outQuotient, BigInt
         outRemainder.data[y] = remainder[y];
     for (; y < maxLength; y++)
         outRemainder.data[y] = 0;
-    if (remainder != 0) {
+    if (remainder != 0)
+    {
         delete[] remainder;
     }
-    if (dividendPart != 0) {
+    if (dividendPart != 0)
+    {
         delete[] dividendPart;
     }
 }
 
-void BigInt::singleByteDivide(BigInt bi1, BigInt bi2, BigInt& outQuotient, BigInt& outRemainder) {
+void BigInt::singleByteDivide(BigInt bi1, BigInt bi2, BigInt& outQuotient, BigInt& outRemainder)
+{
     uint result[maxLength];
     int resultPos = 0;
     int i = 0;
@@ -721,7 +772,8 @@ void BigInt::singleByteDivide(BigInt bi1, BigInt bi2, BigInt& outQuotient, BigIn
     int pos = outRemainder.dataLength - 1;
     uint64 dividend = (uint64) outRemainder.data[pos];
 
-    if (dividend >= divisor) {
+    if (dividend >= divisor)
+    {
         uint64 quotient = dividend / divisor;
         result[resultPos++] = (uint) quotient;
 
@@ -729,10 +781,10 @@ void BigInt::singleByteDivide(BigInt bi1, BigInt bi2, BigInt& outQuotient, BigIn
     }
     pos--;
 
-    while (pos >= 0) {
+    while (pos >= 0)
+    {
 
-        dividend = ((uint64) outRemainder.data[pos + 1] << 32)
-                + (uint64) outRemainder.data[pos];
+        dividend = ((uint64) outRemainder.data[pos + 1] << 32) + (uint64) outRemainder.data[pos];
         uint64 quotient = dividend / divisor;
         result[resultPos++] = (uint) quotient;
 
@@ -757,28 +809,32 @@ void BigInt::singleByteDivide(BigInt bi1, BigInt bi2, BigInt& outQuotient, BigIn
         outRemainder.dataLength--;
 }
 
-BigInt operator /(BigInt bi1, BigInt bi2) {
+BigInt operator /(BigInt bi1, BigInt bi2)
+{
     BigInt quotient;
     BigInt remainder;
 
     int lastPos = maxLength - 1;
     bool divisorNeg = false, dividendNeg = false;
 
-    if ((bi1.data[lastPos] & 0x80000000) != 0) {     // bi1 negative
+    if ((bi1.data[lastPos] & 0x80000000) != 0)     // bi1 negative
+    {
         bi1 = -bi1;
         dividendNeg = true;
     }
 
-    if ((bi2.data[lastPos] & 0x80000000) != 0) {    // bi2 negative
+    if ((bi2.data[lastPos] & 0x80000000) != 0)    // bi2 negative
+    {
         bi2 = -bi2;
         divisorNeg = true;
     }
 
-    if (bi1 < bi2) {
+    if (bi1 < bi2)
+    {
         return quotient;
     }
-
-    else {
+    else
+    {
         if (bi2.dataLength == 1)
             BigInt::singleByteDivide(bi1, bi2, quotient, remainder);
         else
@@ -791,14 +847,16 @@ BigInt operator /(BigInt bi1, BigInt bi2) {
     }
 }
 
-BigInt operator %(BigInt bi1, BigInt bi2) {
+BigInt operator %(BigInt bi1, BigInt bi2)
+{
     BigInt quotient;
     BigInt remainder(bi1);
 
     int lastPos = maxLength - 1;
     bool dividendNeg = false;
 
-    if ((bi1.data[lastPos] & 0x80000000) != 0) {    // bi1 negative
+    if ((bi1.data[lastPos] & 0x80000000) != 0)    // bi1 negative
+    {
         bi1 = -bi1;
         dividendNeg = true;
     }
@@ -806,9 +864,12 @@ BigInt operator %(BigInt bi1, BigInt bi2) {
     if ((bi2.data[lastPos] & 0x80000000) != 0)     // bi2 negative
         bi2 = -bi2;
 
-    if (bi1 < bi2) {
+    if (bi1 < bi2)
+    {
         return remainder;
-    } else {
+    }
+    else
+    {
         if (bi2.dataLength == 1)
             BigInt::singleByteDivide(bi1, bi2, quotient, remainder);
         else
@@ -821,12 +882,14 @@ BigInt operator %(BigInt bi1, BigInt bi2) {
     }
 }
 
-BigInt operator &(const BigInt &bi1, const BigInt &bi2) {
+BigInt operator &(const BigInt &bi1, const BigInt &bi2)
+{
     BigInt result;
 
     int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++)
+    {
         uint sum = (uint) (bi1.data[i] & bi2.data[i]);
         result.data[i] = sum;
     }
@@ -839,12 +902,14 @@ BigInt operator &(const BigInt &bi1, const BigInt &bi2) {
     return result;
 }
 
-BigInt operator |(const BigInt& bi1, const BigInt& bi2) {
+BigInt operator |(const BigInt& bi1, const BigInt& bi2)
+{
     BigInt result;
 
     int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++)
+    {
         uint sum = (uint) (bi1.data[i] | bi2.data[i]);
         result.data[i] = sum;
     }
@@ -857,12 +922,14 @@ BigInt operator |(const BigInt& bi1, const BigInt& bi2) {
     return result;
 }
 
-BigInt operator ^(const BigInt& bi1, const BigInt& bi2) {
+BigInt operator ^(const BigInt& bi1, const BigInt& bi2)
+{
     BigInt result;
 
     int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++)
+    {
         uint sum = (uint) (bi1.data[i] ^ bi2.data[i]);
         result.data[i] = sum;
     }
@@ -875,8 +942,10 @@ BigInt operator ^(const BigInt& bi1, const BigInt& bi2) {
     return result;
 }
 
-int BigInt::jacobi(BigInt a, BigInt b) {
-    if ((b.data[0] & 0x1) == 0) {
+int BigInt::jacobi(BigInt a, BigInt b)
+{
+    if ((b.data[0] & 0x1) == 0)
+    {
         //Exception::Jacobi defined only for odd integers
     }
 
@@ -887,7 +956,8 @@ int BigInt::jacobi(BigInt a, BigInt b) {
     if (a.dataLength == 1 && a.data[0] == 1)
         return 1;  // a == 1
 
-    if (a < BigInt()) {
+    if (a < BigInt())
+    {
         if ((((b - 1).data[0]) & 0x2) == 0) //if( (((b-1) >> 1).data[0] & 0x1) == 0)
             return jacobi(-a, b);
         else
@@ -895,11 +965,14 @@ int BigInt::jacobi(BigInt a, BigInt b) {
     }
 
     int e = 0;
-    for (int index = 0; index < a.dataLength; index++) {
+    for (int index = 0; index < a.dataLength; index++)
+    {
         uint mask = 0x01;
 
-        for (int i = 0; i < 32; i++) {
-            if ((a.data[index] & mask) != 0) {
+        for (int i = 0; i < 32; i++)
+        {
+            if ((a.data[index] & mask) != 0)
+            {
                 index = a.dataLength;      // to break the outer loop
                 break;
             }
@@ -923,11 +996,13 @@ int BigInt::jacobi(BigInt a, BigInt b) {
         return (s * jacobi(b % a1, a1));
 }
 
-BigInt BigInt::genPseudoPrime(int bits, int confidence, Random &rnd) {
+BigInt BigInt::genPseudoPrime(int bits, int confidence, Random &rnd)
+{
     BigInt result;
     bool done = false;
 
-    while (!done) {
+    while (!done)
+    {
         result.genRandomBits(bits, rnd);
 
         result.data[0] |= 0x01;        // make it odd
@@ -935,11 +1010,14 @@ BigInt BigInt::genPseudoPrime(int bits, int confidence, Random &rnd) {
         // prime test
         done = result.isProbablePrime(confidence, rnd);
     }
+
     return result;
 }
 
-BigInt* BigInt::lucasSequence(BigInt P, BigInt Q, BigInt k, BigInt n) {
-    if (k.dataLength == 1 && k.data[0] == 0) {
+BigInt* BigInt::lucasSequence(BigInt P, BigInt Q, BigInt k, BigInt n)
+{
+    if (k.dataLength == 1 && k.data[0] == 0)
+    {
         BigInt* result = new BigInt[3];
 
         result[0] = BigInt();
@@ -961,11 +1039,14 @@ BigInt* BigInt::lucasSequence(BigInt P, BigInt Q, BigInt k, BigInt n) {
     // calculate values of s and t
     int s = 0;
 
-    for (int index = 0; index < k.dataLength; index++) {
+    for (int index = 0; index < k.dataLength; index++)
+    {
         uint mask = 0x01;
 
-        for (int i = 0; i < 32; i++) {
-            if ((k.data[index] & mask) != 0) {
+        for (int i = 0; i < 32; i++)
+        {
+            if ((k.data[index] & mask) != 0)
+            {
                 index = k.dataLength;      // to break the outer loop
                 break;
             }
@@ -979,16 +1060,19 @@ BigInt* BigInt::lucasSequence(BigInt P, BigInt Q, BigInt k, BigInt n) {
     return lucasSequenceHelper(P, Q, t, n, constant, s);
 }
 
-BigInt* BigInt::lucasSequenceHelper(BigInt P, BigInt Q, BigInt k, BigInt n, BigInt constant, int s) {
+BigInt* BigInt::lucasSequenceHelper(BigInt P, BigInt Q, BigInt k, BigInt n, BigInt constant, int s)
+{
     int i = 0;
 
     BigInt* result = new BigInt[3];
 
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 3; i++)
+    {
         result[i] = 0;
     }
 
-    if ((k.data[0] & 0x00000001) == 0) {
+    if ((k.data[0] & 0x00000001) == 0)
+    {
         //Exception::"Argument k must be odd."
     }
     int numbits = k.bitCount();
@@ -1000,15 +1084,16 @@ BigInt* BigInt::lucasSequenceHelper(BigInt P, BigInt Q, BigInt k, BigInt n, BigI
     BigInt v = 2 % n, Q_k = 1 % n, v1 = P % n, u1 = Q_k;
     bool flag = true;
 
-    for (i = k.dataLength - 1; i >= 0; i--) {// iterate on the binary expansion of k
-        while (mask != 0) {
+    for (i = k.dataLength - 1; i >= 0; i--) // iterate on the binary expansion of k
+    {
+        while (mask != 0)
+        {
             if (i == 0 && mask == 0x00000001)        // last bit
                 break;
 
             if ((k.data[i] & mask) != 0)             // bit is set
-                    {
+            {
                 // index doubling with addition
-
                 u1 = (u1 * v1) % n;
 
                 v = ((v * v1) - (P * Q_k)) % n;
@@ -1021,7 +1106,9 @@ BigInt* BigInt::lucasSequenceHelper(BigInt P, BigInt Q, BigInt k, BigInt n, BigI
                     Q_k = n.barrettReduction(Q_k * Q_k, n, constant);
 
                 Q_k = (Q_k * Q) % n;
-            } else {
+            }
+            else
+            {
                 // index doubling
                 u1 = ((u1 * v) - Q_k) % n;
 
@@ -1029,11 +1116,15 @@ BigInt* BigInt::lucasSequenceHelper(BigInt P, BigInt Q, BigInt k, BigInt n, BigI
                 v = n.barrettReduction(v * v, n, constant);
                 v = (v - (Q_k << 1)) % n;
 
-                if (flag) {
+                if (flag)
+                {
                     Q_k = Q % n;
                     flag = false;
-                } else
+                }
+                else
+                {
                     Q_k = n.barrettReduction(Q_k * Q_k, n, constant);
+                }
             }
 
             mask >>= 1;
@@ -1053,16 +1144,21 @@ BigInt* BigInt::lucasSequenceHelper(BigInt P, BigInt Q, BigInt k, BigInt n, BigI
 
     Q_k = (Q_k * Q) % n;
 
-    for (i = 0; i < s; i++) {
+    for (i = 0; i < s; i++)
+    {
         // index doubling
         u1 = (u1 * v) % n;
         v = ((v * v) - (Q_k << 1)) % n;
 
-        if (flag) {
+        if (flag)
+        {
             Q_k = Q % n;
             flag = false;
-        } else
+        }
+        else
+        {
             Q_k = n.barrettReduction(Q_k * Q_k, n, constant);
+        }
     }
 
     result[0] = u1;
@@ -1072,20 +1168,24 @@ BigInt* BigInt::lucasSequenceHelper(BigInt P, BigInt Q, BigInt k, BigInt n, BigI
     return result;
 }
 
-bool BigInt::lucasStrongTestHelper(BigInt thisVal) {
+bool BigInt::lucasStrongTestHelper(BigInt thisVal)
+{
     int64 D = 5, sign = -1, dCount = 0;
     bool done = false;
 
-    while (!done) {
+    while (!done)
+    {
         int Jresult = BigInt::jacobi(D, thisVal);
 
         if (Jresult == -1)
             done = true;    // J(D, this) = 1
-        else {
+        else
+        {
             if ((Jresult == 0) && (BigInt::abs(D) < thisVal)) // divisor found
                 return false;
 
-            if (dCount == 20) {
+            if (dCount == 20)
+            {
                 // check for square
                 BigInt root = thisVal.sqrt();
                 if (root * root == thisVal)
@@ -1103,11 +1203,14 @@ bool BigInt::lucasStrongTestHelper(BigInt thisVal) {
     BigInt p_add1 = thisVal + 1;
     int s = 0;
 
-    for (int index = 0; index < p_add1.dataLength; index++) {
+    for (int index = 0; index < p_add1.dataLength; index++)
+    {
         uint mask = 0x01;
 
-        for (int i = 0; i < 32; i++) {
-            if ((p_add1.data[index] & mask) != 0) {
+        for (int i = 0; i < 32; i++)
+        {
+            if ((p_add1.data[index] & mask) != 0)
+            {
                 index = p_add1.dataLength;      // to break the outer loop
                 break;
             }
@@ -1131,35 +1234,35 @@ bool BigInt::lucasStrongTestHelper(BigInt thisVal) {
     BigInt* lucas = lucasSequenceHelper(1, Q, t, thisVal, constant, 0);
     bool isPrime = false;
 
-    if ((lucas[0].dataLength == 1 && lucas[0].data[0] == 0)
-            || (lucas[1].dataLength == 1 && lucas[1].data[0] == 0)) {
+    if ((lucas[0].dataLength == 1 && lucas[0].data[0] == 0) || (lucas[1].dataLength == 1 && lucas[1].data[0] == 0))
+    {
         // u(t) = 0 or V(t) = 0
         isPrime = true;
     }
 
-    for (int i = 1; i < s; i++) {
-        if (!isPrime) {
+    for (int i = 1; i < s; i++)
+    {
+        if (!isPrime)
+        {
             // doubling of index
-            lucas[1] = thisVal.barrettReduction(lucas[1] * lucas[1], thisVal,
-                    constant);
+            lucas[1] = thisVal.barrettReduction(lucas[1] * lucas[1], thisVal, constant);
             lucas[1] = (lucas[1] - (lucas[2] << 1)) % thisVal;
-
-            //lucas[1] = ((lucas[1] * lucas[1]) - (lucas[2] << 1)) % thisVal;
 
             if ((lucas[1].dataLength == 1 && lucas[1].data[0] == 0))
                 isPrime = true;
         }
 
-        lucas[2] = thisVal.barrettReduction(lucas[2] * lucas[2], thisVal,
-                constant);     //Q^k
+        lucas[2] = thisVal.barrettReduction(lucas[2] * lucas[2], thisVal, constant);     //Q^k
     }
 
-    if (isPrime) {    // additional checks for composite numbers
+    if (isPrime)    // additional checks for composite numbers
+    {
         // If n is prime and gcd(n, Q) == 1, then
         // Q^((n+1)/2) = Q * Q^((n-1)/2) is congruent to (Q * J(Q, n)) mod n
 
         BigInt g = thisVal.gcd(Q);
-        if (g.dataLength == 1 && g.data[0] == 1) {        // gcd(this, Q) == 1
+        if (g.dataLength == 1 && g.data[0] == 1)        // gcd(this, Q) == 1
+        {
             if ((lucas[2].data[maxLength - 1] & 0x80000000) != 0)
                 lucas[2] = lucas[2] + thisVal;
 
@@ -1172,36 +1275,42 @@ bool BigInt::lucasStrongTestHelper(BigInt thisVal) {
         }
     }
 
-    if (lucas != 0) {
+    if (lucas != 0)
+    {
         delete lucas;
     }
 
     return isPrime;
 }
 
-BigInt BigInt::max(const BigInt &bi) {
+BigInt BigInt::max(const BigInt &bi)
+{
     if (*this > bi)
         return BigInt(*this);
     else
         return BigInt(bi);
 }
 
-BigInt BigInt::min(const BigInt &bi) {
+BigInt BigInt::min(const BigInt &bi)
+{
     if (*this < bi)
         return BigInt(*this);
     else
         return BigInt(bi);
 }
 
-BigInt BigInt::abs() {
+BigInt BigInt::abs()
+{
     if ((this->data[maxLength - 1] & 0x80000000) != 0)
         return -(*this);
     else
         return BigInt(*this);
 }
 
-BigInt BigInt::modPow(BigInt exp, BigInt n) {
-    if ((exp.data[maxLength - 1] & 0x80000000) != 0) {
+BigInt BigInt::modPow(BigInt exp, BigInt n)
+{
+    if ((exp.data[maxLength - 1] & 0x80000000) != 0)
+    {
         //Exception::"Positive exponents only."
     }
 
@@ -1209,10 +1318,12 @@ BigInt BigInt::modPow(BigInt exp, BigInt n) {
     BigInt tempNum;
     bool thisNegative = false;
 
-    if ((this->data[maxLength - 1] & 0x80000000) != 0) {  // negative this
+    if ((this->data[maxLength - 1] & 0x80000000) != 0)  // negative this
+    {
         tempNum = (-(*this)) % n;
         thisNegative = true;
-    } else
+    }
+    else
         tempNum = (*this) % n;  // ensures (tempNum * tempNum) < b^(2k)
 
     if ((n.data[maxLength - 1] & 0x80000000) != 0)   // negative n
@@ -1230,10 +1341,12 @@ BigInt BigInt::modPow(BigInt exp, BigInt n) {
     int count = 0;
 
     // perform squaring and multiply exponentiation
-    for (int pos = 0; pos < exp.dataLength; pos++) {
+    for (int pos = 0; pos < exp.dataLength; pos++)
+    {
         uint mask = 0x01;
 
-        for (int index = 0; index < 32; index++) {
+        for (int index = 0; index < 32; index++)
+        {
             if ((exp.data[pos] & mask) != 0)
                 resultNum = barrettReduction(resultNum * tempNum, n, constant);
 
@@ -1241,7 +1354,8 @@ BigInt BigInt::modPow(BigInt exp, BigInt n) {
 
             tempNum = barrettReduction(tempNum * tempNum, n, constant);
 
-            if (tempNum.dataLength == 1 && tempNum.data[0] == 1) {
+            if (tempNum.dataLength == 1 && tempNum.data[0] == 1)
+            {
                 if (thisNegative && (exp.data[0] & 0x1) != 0)    //odd exp
                     return -resultNum;
                 return resultNum;
@@ -1259,7 +1373,8 @@ BigInt BigInt::modPow(BigInt exp, BigInt n) {
     return resultNum;
 }
 
-BigInt BigInt::barrettReduction(BigInt x, BigInt n, BigInt constant) {
+BigInt BigInt::barrettReduction(BigInt x, BigInt n, BigInt constant)
+{
     int k = n.dataLength, kPlusOne = k + 1, kMinusOne = k - 1;
     int i = 0, j = 0;
     BigInt q1;
@@ -1282,28 +1397,24 @@ BigInt BigInt::barrettReduction(BigInt x, BigInt n, BigInt constant) {
     if (q3.dataLength <= 0)
         q3.dataLength = 1;
 
-    // r1 = x mod b^(k+1)
-    // i.e. keep the lowest (k+1) words
     BigInt r1;
     int lengthToCopy = (x.dataLength > kPlusOne) ? kPlusOne : x.dataLength;
     for (i = 0; i < lengthToCopy; i++)
         r1.data[i] = x.data[i];
     r1.dataLength = lengthToCopy;
 
-    // r2 = (q3 * n) mod b^(k+1)
-    // partial multiplication of q3 and n
-
     BigInt r2;
-    for (i = 0; i < q3.dataLength; i++) {
+    for (i = 0; i < q3.dataLength; i++)
+    {
         if (q3.data[i] == 0)
             continue;
 
         uint64 mcarry = 0;
         int t = i;
-        for (int j = 0; j < n.dataLength && t < kPlusOne; j++, t++) {
+        for (int j = 0; j < n.dataLength && t < kPlusOne; j++, t++)
+        {
             // t = i + j
-            uint64 val = ((uint64) q3.data[i] * (uint64) n.data[j])
-                    + (uint64) r2.data[t] + mcarry;
+            uint64 val = ((uint64) q3.data[i] * (uint64) n.data[j]) + (uint64) r2.data[t] + mcarry;
 
             r2.data[t] = (uint) (val & 0xFFFFFFFF);
             mcarry = (val >> 32);
@@ -1318,7 +1429,8 @@ BigInt BigInt::barrettReduction(BigInt x, BigInt n, BigInt constant) {
         r2.dataLength--;
 
     r1 -= r2;
-    if ((r1.data[maxLength - 1] & 0x80000000) != 0) {       // negative
+    if ((r1.data[maxLength - 1] & 0x80000000) != 0)       // negative
+    {
         BigInt val;
         val.data[kPlusOne] = 0x00000001;
         val.dataLength = kPlusOne + 1;
@@ -1331,7 +1443,8 @@ BigInt BigInt::barrettReduction(BigInt x, BigInt n, BigInt constant) {
     return r1;
 }
 
-BigInt BigInt::gcd(const BigInt &bi) {
+BigInt BigInt::gcd(const BigInt &bi)
+{
     BigInt x;
     BigInt y;
 
@@ -1347,7 +1460,8 @@ BigInt BigInt::gcd(const BigInt &bi) {
 
     BigInt g = y;
 
-    while (x.dataLength > 1 || (x.dataLength == 1 && x.data[0] != 0)) {
+    while (x.dataLength > 1 || (x.dataLength == 1 && x.data[0] != 0))
+    {
         g = x;
         x = y % x;
         y = g;
@@ -1356,7 +1470,8 @@ BigInt BigInt::gcd(const BigInt &bi) {
     return g;
 }
 
-void BigInt::genRandomBits(int bits, Random &rnd) {
+void BigInt::genRandomBits(int bits, Random &rnd)
+{
     int dwords = bits >> 5;
     int remBits = bits & 0x1F;
     int i = 0;
@@ -1364,11 +1479,13 @@ void BigInt::genRandomBits(int bits, Random &rnd) {
     if (remBits != 0)
         dwords++;
 
-    if (dwords > maxLength) {
+    if (dwords > maxLength)
+    {
         //Exception::"Number of required bits > maxLength."
     }
 
-    for (i = 0; i < dwords; i++) {
+    for (i = 0; i < dwords; i++)
+    {
         data[i] = rnd.next();
     }
 
@@ -1390,8 +1507,10 @@ void BigInt::genRandomBits(int bits, Random &rnd) {
         dataLength = 1;
 }
 
-int BigInt::bitCount() {
-    while (dataLength > 1 && data[dataLength - 1] == 0) {
+int BigInt::bitCount()
+{
+    while (dataLength > 1 && data[dataLength - 1] == 0)
+    {
         dataLength--;
     }
 
@@ -1401,7 +1520,8 @@ int BigInt::bitCount() {
 
     int bits = 32;
 
-    while (bits > 0 && (value & mask) == 0) {
+    while (bits > 0 && (value & mask) == 0)
+    {
         bits--;
         mask >>= 1;
     }
@@ -1411,7 +1531,8 @@ int BigInt::bitCount() {
     return bits;
 }
 
-bool BigInt::fermatLittleTest(int confidence, Random &rnd) {
+bool BigInt::fermatLittleTest(int confidence, Random &rnd)
+{
     BigInt thisVal;
 
     if ((this->data[maxLength - 1] & 0x80000000) != 0)        // negative
@@ -1419,7 +1540,8 @@ bool BigInt::fermatLittleTest(int confidence, Random &rnd) {
     else
         thisVal = *this;
 
-    if (thisVal.dataLength == 1) {
+    if (thisVal.dataLength == 1)
+    {
         // test small numbers
         if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
             return false;
@@ -1434,10 +1556,12 @@ bool BigInt::fermatLittleTest(int confidence, Random &rnd) {
     BigInt a;
     BigInt p_sub1 = thisVal - BigInt(1);
 
-    for (int round = 0; round < confidence; round++) {
+    for (int round = 0; round < confidence; round++)
+    {
         bool done = false;
 
-        while (!done) {       // generate a < n
+        while (!done)       // generate a < n
+        {
             int testBits = 0;
 
             // make sure "a" has at least 2 bits
@@ -1464,7 +1588,8 @@ bool BigInt::fermatLittleTest(int confidence, Random &rnd) {
 
         // is NOT prime is a^(p-1) mod p != 1
 
-        if (resultLen > 1 || (resultLen == 1 && expResult.data[0] != 1)) {
+        if (resultLen > 1 || (resultLen == 1 && expResult.data[0] != 1))
+        {
             return false;
         }
     }
@@ -1472,7 +1597,8 @@ bool BigInt::fermatLittleTest(int confidence, Random &rnd) {
     return true;
 }
 
-bool BigInt::rabinMillerTest(int confidence, Random &rnd) {
+bool BigInt::rabinMillerTest(int confidence, Random &rnd)
+{
     BigInt thisVal;
 
     if ((this->data[maxLength - 1] & 0x80000000) != 0)        // negative
@@ -1480,7 +1606,8 @@ bool BigInt::rabinMillerTest(int confidence, Random &rnd) {
     else
         thisVal = *this;
 
-    if (thisVal.dataLength == 1) {
+    if (thisVal.dataLength == 1)
+    {
         // test small numbers
         if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
             return false;
@@ -1495,11 +1622,14 @@ bool BigInt::rabinMillerTest(int confidence, Random &rnd) {
     BigInt p_sub1 = thisVal - BigInt(1);
     int s = 0;
 
-    for (int index = 0; index < p_sub1.dataLength; index++) {
+    for (int index = 0; index < p_sub1.dataLength; index++)
+    {
         uint mask = 0x01;
 
-        for (int i = 0; i < 32; i++) {
-            if ((p_sub1.data[index] & mask) != 0) {
+        for (int i = 0; i < 32; i++)
+        {
+            if ((p_sub1.data[index] & mask) != 0)
+            {
                 index = p_sub1.dataLength;      // to break the outer loop
                 break;
             }
@@ -1513,7 +1643,8 @@ bool BigInt::rabinMillerTest(int confidence, Random &rnd) {
     int bits = thisVal.bitCount();
     BigInt a;
 
-    for (int round = 0; round < confidence; round++) {
+    for (int round = 0; round < confidence; round++)
+    {
         bool done = false;
 
         while (!done)        // generate a < n
@@ -1542,9 +1673,10 @@ bool BigInt::rabinMillerTest(int confidence, Random &rnd) {
         if (b.dataLength == 1 && b.data[0] == 1)         // a^t mod p = 1
             result = true;
 
-        for (int j = 0; result == false && j < s; j++) {
+        for (int j = 0; result == false && j < s; j++)
+        {
             if (b == p_sub1)   // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
-                    {
+            {
                 result = true;
                 break;
             }
@@ -1555,10 +1687,12 @@ bool BigInt::rabinMillerTest(int confidence, Random &rnd) {
         if (result == false)
             return false;
     }
+
     return true;
 }
 
-bool BigInt::solovayStrassenTest(int confidence, Random &rnd) {
+bool BigInt::solovayStrassenTest(int confidence, Random &rnd)
+{
     BigInt thisVal;
 
     if ((this->data[maxLength - 1] & 0x80000000) != 0)        // negative
@@ -1566,7 +1700,8 @@ bool BigInt::solovayStrassenTest(int confidence, Random &rnd) {
     else
         thisVal = (*this);
 
-    if (thisVal.dataLength == 1) {
+    if (thisVal.dataLength == 1)
+    {
         // test small numbers
         if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
             return false;
@@ -1584,7 +1719,8 @@ bool BigInt::solovayStrassenTest(int confidence, Random &rnd) {
 
     //Random rand;
 
-    for (int round = 0; round < confidence; round++) {
+    for (int round = 0; round < confidence; round++)
+    {
         bool done = false;
 
         while (!done)        // generate a < n
@@ -1626,7 +1762,8 @@ bool BigInt::solovayStrassenTest(int confidence, Random &rnd) {
     return true;
 }
 
-bool BigInt::lucasStrongTest() {
+bool BigInt::lucasStrongTest()
+{
     BigInt thisVal;
 
     if ((this->data[maxLength - 1] & 0x80000000) != 0)        // negative
@@ -1634,7 +1771,8 @@ bool BigInt::lucasStrongTest() {
     else
         thisVal = *this;
 
-    if (thisVal.dataLength == 1) {
+    if (thisVal.dataLength == 1)
+    {
         // test small numbers
         if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
             return false;
@@ -1648,7 +1786,8 @@ bool BigInt::lucasStrongTest() {
     return lucasStrongTestHelper(thisVal);
 }
 
-bool BigInt::isProbablePrime(int confidence, Random &rnd) {
+bool BigInt::isProbablePrime(int confidence, Random &rnd)
+{
     BigInt thisVal;
 
     if ((this->data[maxLength - 1] & 0x80000000) != 0)        // negative
@@ -1657,26 +1796,25 @@ bool BigInt::isProbablePrime(int confidence, Random &rnd) {
         thisVal = *this;
 
     // test for divisibility by primes
-    for (int p = 0; p < NumberPrimes; p++) {
+    for (int p = 0; p < NumberPrimes; p++)
+    {
         BigInt divisor = Primes[p];
 
         if (divisor >= thisVal)
             break;
 
         BigInt resultNum = thisVal % divisor;
-        if (resultNum.intValue() == 0) {
+        if (resultNum.intValue() == 0)
+        {
             return false;
         }
     }
 
-    if (thisVal.rabinMillerTest(confidence, rnd)) {
-        return true;
-    } else {
-        return false;
-    }
+    return (thisVal.rabinMillerTest(confidence, rnd));
 }
 
-bool BigInt::isProbablePrime() {
+bool BigInt::isProbablePrime()
+{
     BigInt thisVal;
 
     if ((this->data[maxLength - 1] & 0x80000000) != 0)        // negative
@@ -1684,7 +1822,8 @@ bool BigInt::isProbablePrime() {
     else
         thisVal = (*this);
 
-    if (thisVal.dataLength == 1) {
+    if (thisVal.dataLength == 1)
+    {
         // test small numbers
         if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
             return false;
@@ -1696,14 +1835,16 @@ bool BigInt::isProbablePrime() {
         return false;
 
     // test for divisibility by primes < 2000
-    for (int p = 0; p < NumberPrimes; p++) {
+    for (int p = 0; p < NumberPrimes; p++)
+    {
         BigInt divisor = Primes[p];
 
         if (divisor >= thisVal)
             break;
 
         BigInt resultNum = thisVal % divisor;
-        if (resultNum.intValue() == 0) {
+        if (resultNum.intValue() == 0)
+        {
             return false;
         }
     }
@@ -1714,11 +1855,14 @@ bool BigInt::isProbablePrime() {
     BigInt p_sub1 = thisVal - BigInt(1);
     int s = 0;
 
-    for (int index = 0; index < p_sub1.dataLength; index++) {
+    for (int index = 0; index < p_sub1.dataLength; index++)
+    {
         uint mask = 0x01;
 
-        for (int i = 0; i < 32; i++) {
-            if ((p_sub1.data[index] & mask) != 0) {
+        for (int i = 0; i < 32; i++)
+        {
+            if ((p_sub1.data[index] & mask) != 0)
+            {
                 index = p_sub1.dataLength;      // to break the outer loop
                 break;
             }
@@ -1739,8 +1883,10 @@ bool BigInt::isProbablePrime() {
     if (b.dataLength == 1 && b.data[0] == 1)         // a^t mod p = 1
         result = true;
 
-    for (int j = 0; result == false && j < s; j++) {
-        if (b == p_sub1) {     // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+    for (int j = 0; result == false && j < s; j++)
+    {
+        if (b == p_sub1)     // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+        {
             result = true;
             break;
         }
@@ -1755,11 +1901,13 @@ bool BigInt::isProbablePrime() {
     return result;
 }
 
-int BigInt::intValue() {
+int BigInt::intValue()
+{
     return (int) data[0];
 }
 
-uint64 BigInt::longValue() {
+uint64 BigInt::longValue()
+{
     uint64 val = 0;
     val = (uint64) data[0];
     val |= (uint64) data[1] << 32;
@@ -1767,11 +1915,13 @@ uint64 BigInt::longValue() {
     return val;
 }
 
-BigInt BigInt::genCoPrime(int bits, Random &rnd) {
+BigInt BigInt::genCoPrime(int bits, Random &rnd)
+{
     bool done = false;
     BigInt result;
 
-    while (!done) {
+    while (!done)
+    {
         result.genRandomBits(bits, rnd);
 
         // gcd test
@@ -1783,7 +1933,8 @@ BigInt BigInt::genCoPrime(int bits, Random &rnd) {
     return result;
 }
 
-BigInt BigInt::modInverse(BigInt modulus) {
+BigInt BigInt::modInverse(BigInt modulus)
+{
     BigInt p[2] = { BigInt(), BigInt(1) };
     BigInt q[2] = { 0, 0 };    // quotients
     BigInt r[2] = { BigInt(), BigInt() };             // remainders
@@ -1793,11 +1944,13 @@ BigInt BigInt::modInverse(BigInt modulus) {
     BigInt a = modulus;
     BigInt b = *this;
 
-    while (b.dataLength > 1 || (b.dataLength == 1 && b.data[0] != 0)) {
+    while (b.dataLength > 1 || (b.dataLength == 1 && b.data[0] != 0))
+    {
         BigInt quotient;
         BigInt remainder;
 
-        if (step > 1) {
+        if (step > 1)
+        {
             BigInt pval = (p[0] - (p[1] * q[0])) % modulus;
             p[0] = p[1];
             p[1] = pval;
@@ -1819,7 +1972,8 @@ BigInt BigInt::modInverse(BigInt modulus) {
         step++;
     }
 
-    if (r[0].dataLength > 1 || (r[0].dataLength == 1 && r[0].data[0] != 1)) {
+    if (r[0].dataLength > 1 || (r[0].dataLength == 1 && r[0].data[0] != 1))
+    {
         //Exception::"No inverse!"
     }
 
@@ -1831,12 +1985,14 @@ BigInt BigInt::modInverse(BigInt modulus) {
     return result;
 }
 
-void BigInt::getBytes(ubyte result[]) {
+void BigInt::getBytes(ubyte result[])
+{
     int i = 0;
     int pos = 0;
     uint val = 0;
 
-    for (i = dataLength - 1; i >= 0; i--, pos += 4) {
+    for (i = dataLength - 1; i >= 0; i--, pos += 4)
+    {
         val = data[i];
         result[pos + 3] = (ubyte)(val & 0xFF);
         val >>= 8;
@@ -1848,7 +2004,8 @@ void BigInt::getBytes(ubyte result[]) {
     }
 }
 
-int BigInt::getBytesRemovedZero(ubyte result[], int orgLength) {
+int BigInt::getBytesRemovedZero(ubyte result[], int orgLength)
+{
     int numBits = bitCount();
     int i = 0;
     int numBytes = numBits >> 3;
@@ -1856,7 +2013,8 @@ int BigInt::getBytesRemovedZero(ubyte result[], int orgLength) {
     if ((numBits & 0x7) != 0)
         numBytes++;
 
-    for (i = 0; i < orgLength; i++) {
+    for (i = 0; i < orgLength; i++)
+    {
         result[i] = 0;
     }
 
@@ -1866,29 +2024,34 @@ int BigInt::getBytesRemovedZero(ubyte result[], int orgLength) {
     bool isHaveData = false;
 
     uint tempVal = (val >> 24 & 0xFF);
-    if (tempVal != 0) {
+    if (tempVal != 0)
+    {
         result[pos++] = (ubyte) tempVal;
         isHaveData = true;
     }
 
     tempVal = (val >> 16 & 0xFF);
-    if (isHaveData || tempVal != 0) {
+    if (isHaveData || tempVal != 0)
+    {
         result[pos++] = (ubyte) tempVal;
         isHaveData = true;
     }
 
     tempVal = (val >> 8 & 0xFF);
-    if (isHaveData || tempVal != 0) {
+    if (isHaveData || tempVal != 0)
+    {
         result[pos++] = (ubyte) tempVal;
         isHaveData = true;
     }
 
     tempVal = (val & 0xFF);
-    if (isHaveData || tempVal != 0) {
+    if (isHaveData || tempVal != 0)
+    {
         result[pos++] = (ubyte) tempVal;
     }
 
-    for (i = dataLength - 2; i >= 0; i--, pos += 4) {
+    for (i = dataLength - 2; i >= 0; i--, pos += 4)
+    {
         val = data[i];
         result[pos + 3] = (ubyte)(val & 0xFF);
         val >>= 8;
@@ -1902,22 +2065,26 @@ int BigInt::getBytesRemovedZero(ubyte result[], int orgLength) {
     return numBytes;
 }
 
-void BigInt::setBit(uint bitNum) {
+void BigInt::setBit(uint bitNum)
+{
     uint bytePos = bitNum >> 5;             // divide by 32
     char bitPos = (char) (bitNum & 0x1F);    // get the lowest 5 bits
 
     uint mask = (uint) 1 << bitPos;
     this->data[bytePos] |= mask;
 
-    if (bytePos >= (uint) this->dataLength) {
+    if (bytePos >= (uint) this->dataLength)
+    {
         this->dataLength = (int) bytePos + 1;
     }
 }
 
-void BigInt::unsetBit(uint bitNum) {
+void BigInt::unsetBit(uint bitNum)
+{
     uint bytePos = bitNum >> 5;
 
-    if (bytePos < (uint) this->dataLength) {
+    if (bytePos < (uint) this->dataLength)
+    {
         char bitPos = (char) (bitNum & 0x1F);
 
         uint mask = (uint) 1 << bitPos;
@@ -1930,7 +2097,8 @@ void BigInt::unsetBit(uint bitNum) {
     }
 }
 
-BigInt BigInt::sqrt() {
+BigInt BigInt::sqrt()
+{
     uint numBits = (uint) bitCount();
 
     if ((numBits & 0x1) != 0)        // odd number of bits
@@ -1946,14 +2114,17 @@ BigInt BigInt::sqrt() {
     BigInt result;
     if (bitPos == 0)
         mask = 0x80000000;
-    else {
+    else
+    {
         mask = (uint) 1 << bitPos;
         bytePos++;
     }
     result.dataLength = (int) bytePos;
 
-    for (int i = (int) bytePos - 1; i >= 0; i--) {
-        while (mask != 0) {
+    for (int i = (int) bytePos - 1; i >= 0; i--)
+    {
+        while (mask != 0)
+        {
             // guess
             result.data[i] ^= mask;
 
@@ -1969,7 +2140,8 @@ BigInt BigInt::sqrt() {
     return result;
 }
 
-int64 BigInt::abs(int64 value) {
+int64 BigInt::abs(int64 value)
+{
     return (value < 0) ? -value : value;
 }
 

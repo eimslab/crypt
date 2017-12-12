@@ -9,8 +9,10 @@
 using namespace std;
 using namespace cryption::utils;
 
-namespace cryption {
-namespace aes {
+namespace cryption
+{
+namespace aes
+{
 
 static const ubyte sbox[] = { 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76, 0xca, 0x82, 0xc9, 0x7d,
         0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0, 0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1,
@@ -177,12 +179,14 @@ static const uint it[] = {
                 0x9ce4b4d8, 0x90c15664, 0x6184cb7b, 0x70b632d5, 0x745c6c48, 0x4257b8d0, };
 
 template<uint Nb, uint Nk, uint Nr>
-class AES {
+class AES
+{
 private:
     uint w[Nb * (Nr + 1)];
     uint dw[Nb * (Nr + 1)];
 
-    uint padding(ubyte* input, uint len, ubyte* output) {
+    uint padding(ubyte* input, uint len, ubyte* output)
+    {
         uint output_len = len;
         while ((output_len + 4) % 16 != 0) output_len++;
 
@@ -196,7 +200,8 @@ private:
         return output_len + 4;
     }
 
-    void keyExpansion(ubyte* key, uint len) {
+    void keyExpansion(ubyte* key, uint len)
+    {
         assert(len >= Nk * 4); // At least (Nk * 4) bytes long key must be set.
 
         const uint rCon[10] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36 };
@@ -224,7 +229,8 @@ private:
             ++i;
         }
 
-        for (i = 0; i < Nk; i++) {
+        for (i = 0; i < Nk; i++)
+        {
             dw[i] = w[i];
         }
 
@@ -234,8 +240,10 @@ private:
 
     // Need to compute xtimes(a, b). Use table lookup in inverse table (over 0x0b0d090e),
     // and isbox(sbox(x)) = x to avoid implementing finite field multiplication in GF(256).
-    void invMixColumns(uint* s) {
-        for (uint col = 0; col < 4; ++col) {
+    void invMixColumns(uint* s)
+    {
+        for (uint col = 0; col < 4; ++col)
+        {
             ubyte a = s[col] & 0xff;
             ubyte b = (s[col] >> 8) & 0xff;
             ubyte c = (s[col] >> 16) & 0xff;
@@ -247,28 +255,36 @@ private:
         }
     }
 
-    uint rotate(uint n, uint w) {
+    uint rotate(uint n, uint w)
+    {
         assert(n == 0 || n == 1 || n == 2 || n == 3);
         return w << (n * 8) | w >> ((4 - n) * 8);
     }
 
-    uint subWord(uint w) {
+    uint subWord(uint w)
+    {
         return sbox[(ubyte)(w)] | sbox[(ubyte)(w >> 8)] << 8 | sbox[(ubyte)(w >> 16)] << 16 | sbox[(ubyte)(w >> 24)] << 24;
     }
 
-    uint rotWord(uint w) {
+    uint rotWord(uint w)
+    {
         return (w >> 8) | (w << 24);
     }
+
 public:
-    AES(ubyte* key, uint len) {
+
+    AES(ubyte* key, uint len)
+    {
         static_assert ((Nb == 4 && Nk == 4 && Nr == 10) || (Nb == 4 && Nk == 6 && Nr == 12) || (Nb == 4 && Nk == 8 && Nr == 14), "template parameter error.");
         keyExpansion(key, len);
     }
 
-    uint encrypt(ubyte* data, uint len, ubyte* result) {
+    uint encrypt(ubyte* data, uint len, ubyte* result)
+    {
         uint output_len = padding(data, len, result);
 
-        for (uint i = 0; i < output_len / 16; i++) {
+        for (uint i = 0; i < output_len / 16; i++)
+        {
             uint* state = (uint*)result + i * 4;
             uint t[4] = { 0, 0, 0, 0 };
             uint round = 0;
@@ -278,17 +294,20 @@ public:
             state[1] ^= w[1];
             state[2] ^= w[2];
             state[3] ^= w[3];
-            for (uint i = 0; i < Nb; i++) {
+            for (uint i = 0; i < Nb; i++)
+            {
                 t[i] = state[i];
             }
 
-            while (round++ < Nr - 1) {
+            while (round++ < Nr - 1)
+            {
                 // SubBytes, ShiftRows and MixColumns
                 state[0] = t1[(ubyte)(t[0])] ^ t2[(ubyte)(t[1] >> 8)] ^ t3[(ubyte)(t[2] >> 16)] ^ t4[(ubyte)(t[3] >> 24)] ^ w[round * Nb];
                 state[1] = t1[(ubyte)(t[1])] ^ t2[(ubyte)(t[2] >> 8)] ^ t3[(ubyte)(t[3] >> 16)] ^ t4[(ubyte)(t[0] >> 24)] ^ w[round * Nb + 1];
                 state[2] = t1[(ubyte)(t[2])] ^ t2[(ubyte)(t[3] >> 8)] ^ t3[(ubyte)(t[0] >> 16)] ^ t4[(ubyte)(t[1] >> 24)] ^ w[round * Nb + 2];
                 state[3] = t1[(ubyte)(t[3])] ^ t2[(ubyte)(t[0] >> 8)] ^ t3[(ubyte)(t[1] >> 16)] ^ t4[(ubyte)(t[2] >> 24)] ^ w[round * Nb + 3];
-                for (uint i = 0; i < Nb; i++) {
+                for (uint i = 0; i < Nb; i++)
+                {
                     t[i] = state[i];
                 }
             }
@@ -303,14 +322,17 @@ public:
         return output_len;
     }
 
-    uint decrypt(ubyte* data, uint len, ubyte* result) {
+    uint decrypt(ubyte* data, uint len, ubyte* result)
+    {
         assert(len % 16 == 0);
 
-        for (uint i = 0; i < len; i++) {
+        for (uint i = 0; i < len; i++)
+        {
             result[i] = data[i];
         }
 
-        for (uint i = 0; i < len / 16; i++) {
+        for (uint i = 0; i < len / 16; i++)
+        {
             uint *state = (uint*)result + i * 4;
             uint t[4] = { 0, 0, 0, 0 };
 
@@ -323,13 +345,15 @@ public:
                 t[i] = state[i];
             }
 
-            for (int round = Nr - 1; round > 0; --round) {
+            for (int round = Nr - 1; round > 0; --round)
+            {
                 // InvSubBytes, InvShiftRows and InvMixColumns combined
                 state[0] = it[(ubyte)(t[0])] ^ rotate(1, it[(ubyte)(t[3] >> 8)]) ^ rotate(2, it[(ubyte)(t[2] >> 16)]) ^ rotate(3, it[(ubyte)(t[1] >> 24)]) ^ dw[round * Nb];
                 state[1] = it[(ubyte)(t[1])] ^ rotate(1, it[(ubyte)(t[0] >> 8)]) ^ rotate(2, it[(ubyte)(t[3] >> 16)]) ^ rotate(3, it[(ubyte)(t[2] >> 24)]) ^ dw[round * Nb + 1];
                 state[2] = it[(ubyte)(t[2])] ^ rotate(1, it[(ubyte)(t[1] >> 8)]) ^ rotate(2, it[(ubyte)(t[0] >> 16)]) ^ rotate(3, it[(ubyte)(t[3] >> 24)]) ^ dw[round * Nb + 2];
                 state[3] = it[(ubyte)(t[3])] ^ rotate(1, it[(ubyte)(t[2] >> 8)]) ^ rotate(2, it[(ubyte)(t[1] >> 16)]) ^ rotate(3, it[(ubyte)(t[0] >> 24)]) ^ dw[round * Nb + 3];
-                for (uint i = 0; i < Nb; i++) {
+                for (uint i = 0; i < Nb; i++)
+                {
                     t[i] = state[i];
                 }
             }
@@ -349,21 +373,25 @@ typedef AES<4, 4, 10> AES128;
 typedef AES<4, 6, 12> AES192;
 typedef AES<4, 8, 14> AES256;
 
-class AESUtils {
+class AESUtils
+{
 public:
     template<typename AES_X = AES128>
-    static uint encrypt(ubyte* data, uint len, string key, ubyte* result) {
+    static uint encrypt(ubyte* data, uint len, string key, ubyte* result)
+    {
         return handle<AES_X, 1>(data, len, key, result);
     }
 
     template<class AES_X = AES128>
-    static uint decrypt(ubyte* data, uint len, string key, ubyte* result) {
+    static uint decrypt(ubyte* data, uint len, string key, ubyte* result)
+    {
         return handle<AES_X, 2>(data, len, key, result);
     }
 
 private:
     template<class AES_X, int EorD>
-    static uint handle(ubyte* data, uint len, string key, ubyte* result) {
+    static uint handle(ubyte* data, uint len, string key, ubyte* result)
+    {
         AES_X aes((ubyte*)key.c_str(), key.length());
         return (EorD == 1) ? aes.encrypt(data, len, result) : aes.decrypt(data, len, result);
     }

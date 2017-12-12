@@ -3,8 +3,10 @@
 #include "types.h"
 #include "random.h"
 
-namespace cryption {
-namespace utils {
+namespace cryption
+{
+namespace utils
+{
 
 const int maxLength = 200;	// 200*32 = 6400 bits
 
@@ -645,7 +647,8 @@ const int Primes[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47,
         65357, 65371, 65381, 65393, 65407, 65413, 65419, 65423, 65437, 65447,
         65449, 65479, 65497, 65519, 65521, 65537 };
 
-class BigInt {
+class BigInt
+{
 public:
     int dataLength;
 

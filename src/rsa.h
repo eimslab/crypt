@@ -7,32 +7,39 @@
 using namespace std;
 using namespace cryption::utils;
 
-namespace cryption {
-namespace rsa {
+namespace cryption
+{
+namespace rsa
+{
 
-struct RSAKeyPair {
+struct RSAKeyPair
+{
 public:
     string privateKey;
     string publicKey;
 
-    RSAKeyPair(string privateKey, string publicKey) {
+    RSAKeyPair(string privateKey, string publicKey)
+    {
         this->privateKey    = privateKey;
         this->publicKey     = publicKey;
     }
 };
 
-struct RSAKeyInfo {
+struct RSAKeyInfo
+{
 public:
     BigInt  modulus;
     BigInt  exponent;
 
-    RSAKeyInfo(BigInt modulus, BigInt exponent) {
+    RSAKeyInfo(BigInt modulus, BigInt exponent)
+    {
         this->modulus               = modulus;
         this->exponent              = exponent;
     }
 };
 
-class RSA {
+class RSA
+{
 public:
     static RSAKeyPair generateKeyPair(uint);
     static string encodeKey(BigInt, BigInt);
