@@ -9,11 +9,8 @@ namespace cryption
 namespace base64
 {
 
-static const string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
 class Base64
 {
-
 private:
 
     static inline bool isBase64Char(unsigned char c)
@@ -22,6 +19,7 @@ private:
     }
 
 public:
+
     static string encode(ubyte*, uint);
     static uint decode(string const&, ubyte*);
 };

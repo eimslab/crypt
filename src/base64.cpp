@@ -7,6 +7,8 @@ namespace cryption
 namespace base64
 {
 
+static const string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
 string Base64::encode(ubyte* data, uint len)
 {
     string ret;
