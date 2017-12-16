@@ -87,6 +87,22 @@ uint XTEA::decrypt(ubyte* data, uint len, ubyte* result)
     return Utility::readIntFromBytes<uint>(result + (int)(len - 4), ENDIAN_BIG);
 }
 
+uint XTEAUtils::encrypt(ubyte* data, uint len, int key[], ubyte* result)
+{
+    return handle(data, len, key, result, 1);
+}
+
+uint XTEAUtils::decrypt(ubyte* data, uint len, int key[], ubyte* result)
+{
+    return handle(data, len, key, result, 2);
+}
+
+uint XTEAUtils::handle(ubyte* data, uint len, int key[], ubyte* result, int EorD)
+{
+    XTEA xtea(key, 64);
+    return (EorD == 1) ? xtea.encrypt(data, len, result) : xtea.decrypt(data, len, result);
+}
+
 }
 }
 }

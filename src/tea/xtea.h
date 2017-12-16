@@ -25,6 +25,16 @@ public:
     uint decrypt(ubyte*, uint, ubyte*);
 };
 
+class XTEAUtils
+{
+public:
+    static uint encrypt(ubyte* data, uint len, int key[], ubyte* result);
+    static uint decrypt(ubyte* data, uint len, int key[], ubyte* result);
+
+private:
+    static uint handle(ubyte* data, uint len, int key[], ubyte* result, int EorD);
+};
+
 }
 }
 }
