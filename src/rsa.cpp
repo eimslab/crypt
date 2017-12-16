@@ -237,7 +237,7 @@ uint RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* re
         block = new ubyte[blockSize + 1];
         block[0] = preamble;
 
-        for (uint i = 0; i < blockSize; i++)
+        for (int i = 0; i < blockSize; i++)
         {
             block[i + 1] = data[i];
         }
@@ -277,7 +277,7 @@ uint RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* re
 
     delete[] block;
 
-    if (blockSize >= len)
+    if (blockSize >= (int)len)
     {
         result[pos] = 0;
         return pos;
@@ -390,7 +390,7 @@ uint RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* re
     block = new ubyte[len - blockSize];
     t_len = cryption::tea::xtea::XTEAUtils::decrypt(data + blockSize, len - blockSize, xteaKey, block);
 
-    for (uint i = 0; i < t_len; i++)
+    for (int i = 0; i < t_len; i++)
     {
         result[pos++] = block[i];
     }
@@ -403,7 +403,7 @@ uint RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* re
 void RSA::generateXteaKey(ubyte* buf, uint len, int* xteaKey)
 {
     ubyte* data = new ubyte[sizeof(int) * 4];
-    for (int i = 0; i < sizeof(int) * 4; i++)
+    for (int i = 0; i < (int)sizeof(int) * 4; i++)
     {
         data[i] = buf[i % len];
     }
