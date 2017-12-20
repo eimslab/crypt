@@ -1283,22 +1283,6 @@ bool BigInt::lucasStrongTestHelper(BigInt thisVal)
     return isPrime;
 }
 
-BigInt BigInt::max(const BigInt &bi)
-{
-    if (*this > bi)
-        return BigInt(*this);
-    else
-        return BigInt(bi);
-}
-
-BigInt BigInt::min(const BigInt &bi)
-{
-    if (*this < bi)
-        return BigInt(*this);
-    else
-        return BigInt(bi);
-}
-
 BigInt BigInt::abs()
 {
     if ((this->data[maxLength - 1] & 0x80000000) != 0)

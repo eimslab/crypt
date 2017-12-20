@@ -392,7 +392,7 @@ private:
     template<class AES_X, int EorD>
     static uint handle(ubyte* data, uint len, string key, ubyte* result)
     {
-        AES_X aes((ubyte*)key.c_str(), key.length());
+        AES_X aes((ubyte*)key.c_str(), (uint)key.length());
         return (EorD == 1) ? aes.encrypt(data, len, result) : aes.decrypt(data, len, result);
     }
 };

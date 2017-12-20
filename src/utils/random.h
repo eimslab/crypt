@@ -19,7 +19,7 @@ private:
 
 public:
 
-    uint next(uint min = 0, uint max = numeric_limits<uint>::max())
+    uint next(uint min = 0, uint max = (numeric_limits<uint>::max)())
     {
         mt19937 gen(rd());
         std::uniform_int_distribution<uint> dis(min, max);

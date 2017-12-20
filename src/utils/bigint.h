@@ -661,9 +661,6 @@ public:
 
     ~BigInt();
 
-    BigInt max(const BigInt &bi);
-    BigInt min(const BigInt &bi);
-
     BigInt abs();
     BigInt modPow(BigInt exp, BigInt n);
 

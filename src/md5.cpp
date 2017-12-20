@@ -259,8 +259,11 @@ int _httoi(const char* value)
         {'e', 14}, {'f', 15}
     };
 
+#ifdef _MSC_VER
+    char* mstr = _strdup(value);
+#else
     char* mstr = strdup(value);
-    //char* mstr = _strdup(value);
+#endif
     char* s = mstr;
     int result = 0;
     if (*s == '0' && *(s + 1) == 'X') s += 2;
