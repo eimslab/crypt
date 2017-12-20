@@ -161,8 +161,8 @@ void MD5::md5_update(struct md5_context* ctx, __uint8* input, size_t length)
     left = ( ctx->total[0] >> 3 ) & 0x3F;
     fill = 64 - left;
 
-    ctx->total[0] += length <<  3;
-    ctx->total[1] += length >> 29;
+    ctx->total[0] += (unsigned int)(length << 3);
+    ctx->total[1] += (unsigned int)(length >> 29);
 
     ctx->total[0] &= 0xFFFFFFFF;
     ctx->total[1] += ctx->total[0] < length << 3;

@@ -138,7 +138,7 @@ uint Base58::decode(string const& data, ubyte* result)
     }
     result[data.length() - outputStart - zeros] = 0;
 
-    return data.length() - outputStart - zeros;
+    return (uint)(data.length() - outputStart - zeros);
 }
 
 /*

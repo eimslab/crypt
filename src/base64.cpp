@@ -57,7 +57,7 @@ string Base64::encode(ubyte* data, uint len)
 uint Base64::decode(string const& data, ubyte* result)
 {
     const string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    int in_len = data.size();
+    int in_len = (int)data.size();
     int i = 0;
     int j = 0;
     int in_ = 0;
