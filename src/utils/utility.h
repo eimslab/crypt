@@ -9,8 +9,8 @@ namespace utils
 
 enum Endian
 {
-    ENDIAN_LITTLE = __ORDER_LITTLE_ENDIAN__,
-    ENDIAN_BIG    = __ORDER_BIG_ENDIAN__
+    ENDIAN_LITTLE = 1234,
+    ENDIAN_BIG    = 4321
 };
 
 class Utility

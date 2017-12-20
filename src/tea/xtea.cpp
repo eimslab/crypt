@@ -1,4 +1,5 @@
 #include <cassert>
+
 #include "xtea.h"
 
 using namespace cryption::utils;
