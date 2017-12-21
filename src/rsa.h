@@ -33,27 +33,27 @@ public:
 
     RSAKeyInfo(BigInt modulus, BigInt exponent)
     {
-        this->modulus               = modulus;
-        this->exponent              = exponent;
+        this->modulus       = modulus;
+        this->exponent      = exponent;
     }
 };
 
 class RSA
 {
 public:
-    static RSAKeyPair generateKeyPair(uint);
+    static RSAKeyPair generateKeyPair(size_t);
     static string encodeKey(BigInt, BigInt);
     static RSAKeyInfo decodeKey(string const&);
-    static uint encrypt(string const&, ubyte*, uint, ubyte*, bool mixinXteaMode = false);
-    static uint encrypt(RSAKeyInfo, ubyte*, uint, ubyte*, bool mixinXteaMode = false);
-    static uint decrypt(string const&, ubyte*, uint, ubyte*, bool mixinXteaMode = false);
-    static uint decrypt(RSAKeyInfo, ubyte*, uint, ubyte*, bool mixinXteaMode = false);
+    static size_t encrypt(string const&, ubyte*, size_t, ubyte*, bool mixinXteaMode = false);
+    static size_t encrypt(RSAKeyInfo, ubyte*, size_t, ubyte*, bool mixinXteaMode = false);
+    static size_t decrypt(string const&, ubyte*, size_t, ubyte*, bool mixinXteaMode = false);
+    static size_t decrypt(RSAKeyInfo, ubyte*, size_t, ubyte*, bool mixinXteaMode = false);
 
 private:
-    static uint encrypt_mixinXteaMode(RSAKeyInfo, ubyte*, uint, ubyte*);
-    static uint decrypt_mixinXteaMode(RSAKeyInfo, ubyte*, uint, ubyte*);
+    static size_t encrypt_mixinXteaMode(RSAKeyInfo, ubyte*, size_t, ubyte*);
+    static size_t decrypt_mixinXteaMode(RSAKeyInfo, ubyte*, size_t, ubyte*);
 
-    static void generateXteaKey(ubyte* buf, uint len, int* xteaKey);
+    static void generateXteaKey(ubyte* buf, size_t len, int* xteaKey);
 };
 
 }

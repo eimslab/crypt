@@ -16,10 +16,10 @@ class Base58
 private:
     static void init(int*, char*);
     static BigInt decodeToBigInteger(string input);
-    static ubyte divmod(ubyte* number, int len, int firstDigit, int base, int divisor);
+    static ubyte divmod(ubyte* number, size_t len, int firstDigit, int base, int divisor);
 public:
-    static string encode(ubyte*, uint);
-    static uint decode(string const&, ubyte*);
+    static string encode(ubyte*, size_t);
+    static size_t decode(string const&, ubyte*);
 };
 
 }

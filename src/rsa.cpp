@@ -44,18 +44,18 @@ extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason,
 
 #else
 
-extern "C" uint rsaKeyGenerate(uint bitLength, char* result);
+extern "C" size_t rsaKeyGenerate(int bitLength, char* result);
 
 #endif
 
-uint rsaKeyGenerate(uint bitLength, char* result)
+size_t rsaKeyGenerate(int bitLength, char* result)
 {
     RSAKeyPair keyPair = RSA::generateKeyPair(bitLength);
     string key = "privateKey:\r\n" + keyPair.privateKey + "\r\npublicKey:\r\n" + keyPair.publicKey;
 
     ubyte* p = (ubyte*)key.c_str();
-    int i;
-    for (i = 0; i < (int)key.length(); i++)
+    size_t i;
+    for (i = 0; i < key.length(); i++)
     {
         result[i] = p[i];
     }
@@ -71,7 +71,7 @@ namespace rsa
 
 Random rnd;
 
-RSAKeyPair RSA::generateKeyPair(uint bitLength = 1024)
+RSAKeyPair RSA::generateKeyPair(size_t bitLength = 1024)
 {
     assert((bitLength >= 128) && (bitLength % 8 == 0));
 
@@ -90,23 +90,23 @@ RSAKeyPair RSA::generateKeyPair(uint bitLength = 1024)
 
 string RSA::encodeKey(BigInt modulus, BigInt exponent)
 {
-    uint m_len = modulus.dataLength << 2;
+    int m_len = modulus.dataLength << 2;
     ubyte* m_bytes = new ubyte[m_len];
     m_len = modulus.getBytesRemovedZero(m_bytes, m_len);
 
-    uint e_len = exponent.dataLength << 2;
+    int e_len = exponent.dataLength << 2;
     ubyte* e_bytes = new ubyte[e_len];
     e_len = exponent.getBytesRemovedZero(e_bytes, e_len);
 
     ubyte* buffer = new ubyte[4 + m_len + e_len];
-    Utility::writeIntToBytes<uint>(m_len, buffer, ENDIAN_BIG);
+    Utility::writeIntToBytes<int>(m_len, buffer, ENDIAN_BIG);
 
-    for (uint i = 0; i < m_len; i++)
+    for (int i = 0; i < m_len; i++)
     {
         buffer[i + 4] = m_bytes[i];
     }
 
-    for (uint i = 0; i < e_len; i++)
+    for (int i = 0; i < e_len; i++)
     {
         buffer[i + 4 + m_len] = e_bytes[i];
     }
@@ -122,17 +122,17 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent)
 RSAKeyInfo RSA::decodeKey(string const& key)
 {
     ubyte* buffer = new ubyte[key.size()];
-    uint size = cryption::base64::Base64::decode(key, buffer);
-    uint m_len = Utility::readIntFromBytes<uint>(buffer, ENDIAN_BIG);
+    size_t size = cryption::base64::Base64::decode(key, buffer);
+    int m_len = Utility::readIntFromBytes<int>(buffer, ENDIAN_BIG);
 
     ubyte* m_bytes = new ubyte[m_len];
-    for (uint i = 0; i < m_len; i++)
+    for (int i = 0; i < m_len; i++)
     {
         m_bytes[i] = buffer[i + 4];
     }
 
-    ubyte* e_bytes = new ubyte[(int)(size - 4 - m_len)];
-    for (int i = 0; i < (int)(size - 4 - m_len); i++)
+    ubyte* e_bytes = new ubyte[size - 4 - m_len];
+    for (size_t i = 0; i < size - 4 - m_len; i++)
     {
         e_bytes[i] = buffer[i + 4 + m_len];
     }
@@ -145,30 +145,30 @@ RSAKeyInfo RSA::decodeKey(string const& key)
     return ret;
 }
 
-uint RSA::encrypt(string const& key, ubyte* data, uint len, ubyte* result, bool mixinXteaMode)
+size_t RSA::encrypt(string const& key, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode)
 {
     RSAKeyInfo keyInfo = decodeKey(key);
     return encrypt(keyInfo, data, len, result, mixinXteaMode);
 }
 
-uint RSA::encrypt(RSAKeyInfo key, ubyte* data, uint len, ubyte* result, bool mixinXteaMode)
+size_t RSA::encrypt(RSAKeyInfo key, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode)
 {
     if (mixinXteaMode)
     {
         return encrypt_mixinXteaMode(key, data, len, result);
     }
 
-    uint keySize = key.modulus.dataLength << 2;
+    int keySize = key.modulus.dataLength << 2;
     ubyte* t_buf = new ubyte[keySize];
     keySize = key.modulus.getBytesRemovedZero(t_buf, keySize);
     delete[] t_buf;
-    uint pos = 0, ret_pos = 0;
+    size_t pos = 0, ret_pos = 0;
     ubyte* block;
     BigInt bi;
 
     while (pos < len)
     {
-        int blockSize = ((keySize - 1) <= (len - pos)) ? (keySize - 1) : (len - pos);
+        int blockSize = (int)(((keySize - 1) <= (len - pos)) ? (keySize - 1) : (len - pos));
         ubyte preamble = (ubyte)rnd.next(0x01, 0xFF);
 
         while (true)
@@ -176,7 +176,7 @@ uint RSA::encrypt(RSAKeyInfo key, ubyte* data, uint len, ubyte* result, bool mix
             block = new ubyte[blockSize + 1];
             block[0] = preamble;
 
-            for (uint i = pos; i < pos + blockSize; i++)
+            for (size_t i = pos; i < pos + blockSize; i++)
             {
                 block[i - pos + 1] = data[i];
             }
@@ -198,18 +198,18 @@ uint RSA::encrypt(RSAKeyInfo key, ubyte* data, uint len, ubyte* result, bool mix
         pos += blockSize;
         bi = bi.modPow(key.exponent, key.modulus);
         delete[] block;
-        uint block_len = bi.dataLength << 2;
+        int block_len = bi.dataLength << 2;
         block = new ubyte[block_len];
         block_len = bi.getBytesRemovedZero(block, block_len);
 
         if (block_len < keySize)
         {
-            for (int i = 0; i < (int)(keySize - block_len); i++)
+            for (int i = 0; i < keySize - block_len; i++)
             {
                 result[ret_pos++] = 0x00;
             }
         }
-        for (uint i = 0; i < block_len; i++)
+        for (int i = 0; i < block_len; i++)
         {
             result[ret_pos++] = block[i];
         }
@@ -221,17 +221,17 @@ uint RSA::encrypt(RSAKeyInfo key, ubyte* data, uint len, ubyte* result, bool mix
     return ret_pos;
 }
 
-uint RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* result)
+size_t RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, size_t len, ubyte* result)
 {
-    uint keySize = key.modulus.dataLength << 2;
+    int keySize = key.modulus.dataLength << 2;
     ubyte* t_buf = new ubyte[keySize];
     keySize = key.modulus.getBytesRemovedZero(t_buf, keySize);
     delete[] t_buf;
-    uint pos = 0;
+    size_t pos = 0;
     ubyte* block;
     BigInt bi;
 
-    int blockSize = ((keySize - 1) <= len) ? (keySize - 1) : len;
+    int blockSize = (int)(((keySize - 1) <= len) ? (keySize - 1) : len);
     ubyte preamble = (ubyte)rnd.next(0x01, 0xFF);
     int xteaKey[4];
 
@@ -262,33 +262,33 @@ uint RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* re
 
     bi = bi.modPow(key.exponent, key.modulus);
     delete[] block;
-    uint t_len = bi.dataLength << 2;
+    int t_len = bi.dataLength << 2;
     block = new ubyte[t_len];
     t_len = bi.getBytesRemovedZero(block, t_len);
 
     if (t_len < keySize)
     {
-        for (int i = 0; i < (int)(keySize - t_len); i++)
+        for (int i = 0; i < keySize - t_len; i++)
         {
             result[pos++] = 0x00;
         }
     }
-    for (uint i = 0; i < t_len; i++)
+    for (int i = 0; i < t_len; i++)
     {
         result[pos++] = block[i];
     }
 
     delete[] block;
 
-    if (blockSize >= (int)len)
+    if (blockSize >= len)
     {
         result[pos] = 0;
         return pos;
     }
 
     block = new ubyte[len - blockSize + 12];
-    t_len = cryption::tea::xtea::XTEAUtils::encrypt(data + blockSize, len - blockSize, xteaKey, block);
-    for (uint i = 0; i < t_len; i++)
+    size_t remainder_len = cryption::tea::xtea::XTEAUtils::encrypt(data + blockSize, len - blockSize, xteaKey, block);
+    for (size_t i = 0; i < remainder_len; i++)
     {
         result[pos++] = block[i];
     }
@@ -298,33 +298,33 @@ uint RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* re
     return pos;
 }
 
-uint RSA::decrypt(string const& key, ubyte* data, uint len, ubyte* result, bool mixinXteaMode)
+size_t RSA::decrypt(string const& key, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode)
 {
     RSAKeyInfo keyInfo = decodeKey(key);
     return decrypt(keyInfo, data, len, result, mixinXteaMode);
 }
 
-uint RSA::decrypt(RSAKeyInfo key, ubyte* data, uint len, ubyte* result, bool mixinXteaMode)
+size_t RSA::decrypt(RSAKeyInfo key, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode)
 {
     if (mixinXteaMode)
     {
         return decrypt_mixinXteaMode(key, data, len, result);
     }
 
-    uint keySize = key.modulus.dataLength << 2;
+    int keySize = key.modulus.dataLength << 2;
     ubyte* t_buf = new ubyte[keySize];
     keySize = key.modulus.getBytesRemovedZero(t_buf, keySize);
     delete[] t_buf;
-    uint pos = 0, ret_pos = 0;
+    size_t pos = 0, ret_pos = 0;
     ubyte* block;
     BigInt bi;
 
     while (pos < len)
     {
-        uint blockSize = (keySize <= (len - pos)) ? keySize : (len - pos);
+        int blockSize = (int)((keySize <= (len - pos)) ? keySize : (len - pos));
         block = new ubyte[blockSize];
 
-        for (uint i = pos; i < pos + blockSize; i++)
+        for (size_t i = pos; i < pos + blockSize; i++)
         {
             block[i - pos] = data[i];
         }
@@ -350,20 +350,20 @@ uint RSA::decrypt(RSAKeyInfo key, ubyte* data, uint len, ubyte* result, bool mix
     return ret_pos;
 }
 
-uint RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* result)
+size_t RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, size_t len, ubyte* result)
 {
-    uint keySize = key.modulus.dataLength << 2;
+    int keySize = key.modulus.dataLength << 2;
     ubyte* t_buf = new ubyte[keySize];
     keySize = key.modulus.getBytesRemovedZero(t_buf, keySize);
     delete[] t_buf;
-    uint pos = 0;
+    size_t pos = 0;
     ubyte* block;
     int xteaKey[4];
 
-    uint blockSize = (keySize <= len) ? keySize : len;
+    int blockSize = (int)((keySize <= len) ? keySize : len);
     block = new ubyte[blockSize];
 
-    for (uint i = 0; i < blockSize; i++)
+    for (int i = 0; i < blockSize; i++)
     {
         block[i] = data[i];
     }
@@ -391,9 +391,9 @@ uint RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* re
     }
 
     block = new ubyte[len - blockSize];
-    t_len = cryption::tea::xtea::XTEAUtils::decrypt(data + blockSize, len - blockSize, xteaKey, block);
+    size_t remainder_len = cryption::tea::xtea::XTEAUtils::decrypt(data + blockSize, len - blockSize, xteaKey, block);
 
-    for (int i = 0; i < t_len; i++)
+    for (size_t i = 0; i < remainder_len; i++)
     {
         result[pos++] = block[i];
     }
@@ -403,7 +403,7 @@ uint RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, uint len, ubyte* re
     return pos;
 }
 
-void RSA::generateXteaKey(ubyte* buf, uint len, int* xteaKey)
+void RSA::generateXteaKey(ubyte* buf, size_t len, int* xteaKey)
 {
     ubyte* data = new ubyte[sizeof(int) * 4];
     for (int i = 0; i < (int)sizeof(int) * 4; i++)

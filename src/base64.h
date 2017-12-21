@@ -20,8 +20,8 @@ private:
 
 public:
 
-    static string encode(ubyte*, uint);
-    static uint decode(string const&, ubyte*);
+    static string encode(ubyte*, size_t);
+    static size_t decode(string const&, ubyte*);
 };
 
 }

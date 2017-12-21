@@ -18,27 +18,27 @@ XTEA::XTEA(int* key, int rounds)
     this->m_rounds = rounds;
 }
 
-uint XTEA::padding(ubyte* data, uint len, ubyte* output)
+size_t XTEA::padding(ubyte* data, size_t len, ubyte* output)
 {
-    uint output_len = len;
+    size_t output_len = len;
     while ((output_len + 4) % 8 != 0) output_len++;
 
-    for (uint i = 0; i < len; i++)
+    for (size_t i = 0; i < len; i++)
         output[i] = data[i];
-    for (uint i = len; i < output_len; i++)
+    for (size_t i = len; i < output_len; i++)
         output[i] = 0;
 
-    Utility::writeIntToBytes<uint>(len, output + output_len, ENDIAN_BIG);
+    Utility::writeIntToBytes<uint>((uint)len, output + output_len, ENDIAN_BIG);
 
     return output_len + 4;
 }
 
 // Encrypt given ubyte array (length to be crypted must be 8 ubyte aligned)
-uint XTEA::encrypt(ubyte* data, uint len, ubyte* result)
+size_t XTEA::encrypt(ubyte* data, size_t len, ubyte* result)
 {
-    uint output_len = padding(data, len, result);
+    size_t output_len = padding(data, len, result);
 
-    for (uint i = 0; i < (output_len + 4) / 8; i++)
+    for (size_t i = 0; i < (output_len + 4) / 8; i++)
     {
         int v0 = Utility::readIntFromBytes<int>(result + (i * 8));
         int v1 = Utility::readIntFromBytes<int>(result + (i * 8 + 4));
@@ -60,14 +60,14 @@ uint XTEA::encrypt(ubyte* data, uint len, ubyte* result)
 }
 
 // Decrypt given ubyte array (length to be crypted must be 8 ubyte aligned)
-uint XTEA::decrypt(ubyte* data, uint len, ubyte* result)
+size_t XTEA::decrypt(ubyte* data, size_t len, ubyte* result)
 {
     assert(len > 0 && len % 8 == 0);
 
-    for (uint i = 0; i < len; i++)
+    for (size_t i = 0; i < len; i++)
         result[i] = data[i];
 
-    for (uint i = 0; i < len / 8; i++)
+    for (size_t i = 0; i < len / 8; i++)
     {
         int v0 = Utility::readIntFromBytes<int>(result + (i * 8));
         int v1 = Utility::readIntFromBytes<int>(result + (i * 8 + 4));
@@ -85,20 +85,20 @@ uint XTEA::decrypt(ubyte* data, uint len, ubyte* result)
         Utility::writeIntToBytes<int>(v1, result + (i * 8 + 4));
     }
 
-    return Utility::readIntFromBytes<uint>(result + (int)(len - 4), ENDIAN_BIG);
+    return Utility::readIntFromBytes<uint>(result + (len - 4), ENDIAN_BIG);
 }
 
-uint XTEAUtils::encrypt(ubyte* data, uint len, int key[], ubyte* result)
+size_t XTEAUtils::encrypt(ubyte* data, size_t len, int key[], ubyte* result)
 {
     return handle(data, len, key, result, 1);
 }
 
-uint XTEAUtils::decrypt(ubyte* data, uint len, int key[], ubyte* result)
+size_t XTEAUtils::decrypt(ubyte* data, size_t len, int key[], ubyte* result)
 {
     return handle(data, len, key, result, 2);
 }
 
-uint XTEAUtils::handle(ubyte* data, uint len, int key[], ubyte* result, int EorD)
+size_t XTEAUtils::handle(ubyte* data, size_t len, int key[], ubyte* result, int EorD)
 {
     XTEA xtea(key, 64);
     return (EorD == 1) ? xtea.encrypt(data, len, result) : xtea.decrypt(data, len, result);

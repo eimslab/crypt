@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 #include "../utils/types.h"
 #include "../utils/utility.h"
 
@@ -17,22 +19,22 @@ private:
     int* m_key;     // Key - 4 integer
     int m_rounds;   // Round to go - 64 are commonly used
 
-    uint padding(ubyte*, uint, ubyte*);
+    size_t padding(ubyte*, size_t, ubyte*);
 public:
     XTEA(int* _key, int _rounds);
 
-    uint encrypt(ubyte*, uint, ubyte*);
-    uint decrypt(ubyte*, uint, ubyte*);
+    size_t encrypt(ubyte*, size_t, ubyte*);
+    size_t decrypt(ubyte*, size_t, ubyte*);
 };
 
 class XTEAUtils
 {
 public:
-    static uint encrypt(ubyte* data, uint len, int key[], ubyte* result);
-    static uint decrypt(ubyte* data, uint len, int key[], ubyte* result);
+    static size_t encrypt(ubyte* data, size_t len, int key[], ubyte* result);
+    static size_t decrypt(ubyte* data, size_t len, int key[], ubyte* result);
 
 private:
-    static uint handle(ubyte* data, uint len, int key[], ubyte* result, int EorD);
+    static size_t handle(ubyte* data, size_t len, int key[], ubyte* result, int EorD);
 };
 
 }

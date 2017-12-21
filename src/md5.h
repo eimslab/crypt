@@ -42,28 +42,12 @@ private:
 
 public:
 
-    //! construct a md5 from any buffer
     string GenerateMD5(unsigned char* buffer, size_t bufferlen);
-
-    //! construct a md5
     MD5();
-
-    //! construct a md5src from char *
     MD5(const char * md5src);
-
-    //! construct a md5 from a 16 bytes md5
     MD5(unsigned int* md5src);
-
-    //! add a other md5
     MD5 operator +(MD5 adder);
-
-    //! just if equal
     bool operator ==(MD5 cmper);
-
-    //! give the value from equer
-    // void operator =(MD5 equer);
-
-    //! to a string
     string ToString();
 
     unsigned int m_data[4];

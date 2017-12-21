@@ -325,11 +325,6 @@ bool MD5::operator == (MD5 cmper)
     return (memcmp(cmper.m_data, m_data, 16) == 0);
 }
 
-//void MD5::operator =(MD5 equer)
-//{
-// memcpy(m_data,equer.m_data, 16);
-//}
-
 string MD5::ToString()
 {
     char output[33];

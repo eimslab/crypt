@@ -185,14 +185,14 @@ private:
     uint w[Nb * (Nr + 1)];
     uint dw[Nb * (Nr + 1)];
 
-    uint padding(ubyte* input, uint len, ubyte* output)
+    size_t padding(ubyte* input, size_t len, ubyte* output)
     {
-        uint output_len = len;
+        size_t output_len = len;
         while ((output_len + 4) % 16 != 0) output_len++;
 
-        for (uint i = 0; i < len; i++)
+        for (size_t i = 0; i < len; i++)
             output[i] = input[i];
-        for (uint i = len; i < output_len; i++)
+        for (size_t i = len; i < output_len; i++)
             output[i] = 0;
 
         Utility::writeIntToBytes<uint>(len, output + output_len, ENDIAN_BIG);
@@ -200,7 +200,7 @@ private:
         return output_len + 4;
     }
 
-    void keyExpansion(ubyte* key, uint len)
+    void keyExpansion(ubyte* key, size_t len)
     {
         assert(len >= Nk * 4); // At least (Nk * 4) bytes long key must be set.
 
@@ -242,7 +242,7 @@ private:
     // and isbox(sbox(x)) = x to avoid implementing finite field multiplication in GF(256).
     void invMixColumns(uint* s)
     {
-        for (uint col = 0; col < 4; ++col)
+        for (int col = 0; col < 4; ++col)
         {
             ubyte a = s[col] & 0xff;
             ubyte b = (s[col] >> 8) & 0xff;
@@ -273,17 +273,17 @@ private:
 
 public:
 
-    AES(ubyte* key, uint len)
+    AES(ubyte* key, size_t len)
     {
         static_assert ((Nb == 4 && Nk == 4 && Nr == 10) || (Nb == 4 && Nk == 6 && Nr == 12) || (Nb == 4 && Nk == 8 && Nr == 14), "template parameter error.");
         keyExpansion(key, len);
     }
 
-    uint encrypt(ubyte* data, uint len, ubyte* result)
+    size_t encrypt(ubyte* data, size_t len, ubyte* result)
     {
-        uint output_len = padding(data, len, result);
+        size_t output_len = padding(data, len, result);
 
-        for (uint i = 0; i < output_len / 16; i++)
+        for (size_t i = 0; i < output_len / 16; i++)
         {
             uint* state = (uint*)result + i * 4;
             uint t[4] = { 0, 0, 0, 0 };
@@ -322,16 +322,16 @@ public:
         return output_len;
     }
 
-    uint decrypt(ubyte* data, uint len, ubyte* result)
+    size_t decrypt(ubyte* data, size_t len, ubyte* result)
     {
         assert(len % 16 == 0);
 
-        for (uint i = 0; i < len; i++)
+        for (size_t i = 0; i < len; i++)
         {
             result[i] = data[i];
         }
 
-        for (uint i = 0; i < len / 16; i++)
+        for (size_t i = 0; i < len / 16; i++)
         {
             uint *state = (uint*)result + i * 4;
             uint t[4] = { 0, 0, 0, 0 };
@@ -377,22 +377,22 @@ class AESUtils
 {
 public:
     template<typename AES_X = AES128>
-    static uint encrypt(ubyte* data, uint len, string key, ubyte* result)
+    static size_t encrypt(ubyte* data, size_t len, string key, ubyte* result)
     {
         return handle<AES_X, 1>(data, len, key, result);
     }
 
     template<class AES_X = AES128>
-    static uint decrypt(ubyte* data, uint len, string key, ubyte* result)
+    static size_t decrypt(ubyte* data, size_t len, string key, ubyte* result)
     {
         return handle<AES_X, 2>(data, len, key, result);
     }
 
 private:
     template<class AES_X, int EorD>
-    static uint handle(ubyte* data, uint len, string key, ubyte* result)
+    static size_t handle(ubyte* data, size_t len, string key, ubyte* result)
     {
-        AES_X aes((ubyte*)key.c_str(), (uint)key.length());
+        AES_X aes((ubyte*)key.c_str(), key.length());
         return (EorD == 1) ? aes.encrypt(data, len, result) : aes.decrypt(data, len, result);
     }
 };

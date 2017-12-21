@@ -21,9 +21,9 @@
 //    ubyte data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 //
 //    ubyte* en = new ubyte[16 + 20];
-//    int len = aes.encrypt(data, 16, en);
+//    size_t len = aes.encrypt(data, 16, en);
 //
-//    for (int i = 0; i < len; i ++)
+//    for (size_t i = 0; i < len; i ++)
 //    {
 //        cout << (int)en[i] << ", ";
 //    }
@@ -32,7 +32,7 @@
 //    ubyte* de = new ubyte[len];
 //    len = aes.decrypt(en, len, de);
 //
-//    for (int i = 0; i < len; i ++)
+//    for (size_t i = 0; i < len; i ++)
 //    {
 //        cout << (int)de[i] << ", ";
 //    }
@@ -46,8 +46,8 @@
 //    ubyte data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 //
 //    ubyte* en = new ubyte[16 + 20];
-//    int len = AESUtils::encrypt<AES128>(data, 16, key, en);
-//    for (int i = 0; i < len; i ++)
+//    size_t len = AESUtils::encrypt<AES128>(data, 16, key, en);
+//    for (size_t i = 0; i < len; i ++)
 //    {
 //        cout << (int)en[i] << ", ";
 //    }
@@ -57,7 +57,7 @@
 //    ubyte* de = new ubyte[len];
 //    len = AESUtils::decrypt<AES128>(en, len, key, de);
 //
-//    for (int i = 0; i < len; i ++)
+//    for (size_t i = 0; i < len; i ++)
 //    {
 //        cout << (int)de[i] << ", ";
 //    }
@@ -72,9 +72,9 @@
 //
 //    ubyte data[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 //    ubyte* en = new ubyte[12 + 12];
-//    int len = xtea.encrypt(data, 12, en);
+//    size_t len = xtea.encrypt(data, 12, en);
 //
-//    for (int i = 0; i < len; i ++)
+//    for (size_t i = 0; i < len; i ++)
 //    {
 //        cout << (int)en[i] << endl;
 //    }
@@ -82,7 +82,7 @@
 //    ubyte* de = new ubyte[len];
 //    len = xtea.decrypt(en, len, de);
 //
-//    for (int i = 0; i < len; i ++)
+//    for (size_t i = 0; i < len; i ++)
 //    {
 //        cout << (int)de[i] << endl;
 //    }
@@ -99,7 +99,7 @@
 //    cout << ret << endl;
 //
 //    p = new ubyte[data.length() * 2];
-//    int len = Base58::decode(ret, p);
+//    size_t len = Base58::decode(ret, p);
 //
 //    cout << string((char*)p, 0, len);
 //    return 0;
@@ -115,7 +115,7 @@
 //
 //    ubyte* buf = new ubyte[data.length() * 2];
 //    ubyte* p = (ubyte*)data.c_str();
-//    int len = RSA::encrypt(keyPair.privateKey, p, strlen((char*)p), buf);
+//    size_t len = RSA::encrypt(keyPair.privateKey, p, strlen((char*)p), buf);
 //
 //    ubyte* buf2 = new ubyte[data.length() * 2];
 //    len = RSA::decrypt(keyPair.publicKey, buf, len, buf2);

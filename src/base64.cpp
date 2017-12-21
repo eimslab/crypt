@@ -7,7 +7,7 @@ namespace cryption
 namespace base64
 {
 
-string Base64::encode(ubyte* data, uint len)
+string Base64::encode(ubyte* data, size_t len)
 {
     const string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     string ret;
@@ -54,10 +54,10 @@ string Base64::encode(ubyte* data, uint len)
     return ret;
 }
 
-uint Base64::decode(string const& data, ubyte* result)
+size_t Base64::decode(string const& data, ubyte* result)
 {
     const string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    int in_len = (int)data.size();
+    size_t in_len = data.size();
     int i = 0;
     int j = 0;
     int in_ = 0;
