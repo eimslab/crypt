@@ -195,7 +195,7 @@ private:
         for (size_t i = len; i < output_len; i++)
             output[i] = 0;
 
-        Utility::writeIntToBytes<uint>(len, output + output_len, ENDIAN_BIG);
+        Utility::writeIntToBytes<uint>((uint)len, output + output_len, ENDIAN_BIG);
 
         return output_len + 4;
     }

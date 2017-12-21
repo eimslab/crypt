@@ -71,7 +71,7 @@ namespace rsa
 
 Random rnd;
 
-RSAKeyPair RSA::generateKeyPair(size_t bitLength = 1024)
+RSAKeyPair RSA::generateKeyPair(uint bitLength = 1024)
 {
     assert((bitLength >= 128) && (bitLength % 8 == 0));
 

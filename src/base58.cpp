@@ -52,7 +52,7 @@ string Base58::encode(ubyte* data, size_t len)
 
     for (size_t inputStart = zeros; inputStart < len;)
     {
-        encoded[--outputStart] = ALPHABET[divmod(input, len, inputStart, 256, 58)];
+        encoded[--outputStart] = ALPHABET[divmod(input, len, (int)inputStart, 256, 58)];
 
         if (input[inputStart] == 0)
         {
@@ -117,7 +117,7 @@ size_t Base58::decode(string const& data, ubyte* result)
 
     for (size_t inputStart = zeros; inputStart < data.length();)
     {
-        decoded[--outputStart] = divmod(input58, data.length(), inputStart, 58, 256);
+        decoded[--outputStart] = divmod(input58, data.length(), (int)inputStart, 58, 256);
 
         if (input58[inputStart] == 0)
         {
@@ -149,8 +149,8 @@ to contain the quotient, and the return value is the remainder.
 BigInt Base58::decodeToBigInteger(string input)
 {
     ubyte* buf = new ubyte[input.length() * 2];
-    uint len = Base58::decode(input, buf);
-    return BigInt(buf, len);
+    size_t len = Base58::decode(input, buf);
+    return BigInt(buf, (int)len);
 }
 
 ubyte Base58::divmod(ubyte* number, size_t len, int firstDigit, int base, int divisor)

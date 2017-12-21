@@ -41,7 +41,7 @@ public:
 class RSA
 {
 public:
-    static RSAKeyPair generateKeyPair(size_t);
+    static RSAKeyPair generateKeyPair(uint);
     static string encodeKey(BigInt, BigInt);
     static RSAKeyInfo decodeKey(string const&);
     static size_t encrypt(string const&, ubyte*, size_t, ubyte*, bool mixinXteaMode = false);
