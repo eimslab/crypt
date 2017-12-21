@@ -168,7 +168,7 @@ size_t RSA::encrypt(RSAKeyInfo key, ubyte* data, size_t len, ubyte* result, bool
 
     while (pos < len)
     {
-        int blockSize = (int)(((keySize - 1) <= (len - pos)) ? (keySize - 1) : (len - pos));
+        int blockSize = (int)(((keySize - 1) <= (int)(len - pos)) ? (keySize - 1) : (len - pos));
         ubyte preamble = (ubyte)rnd.next(0x01, 0xFF);
 
         while (true)
@@ -231,7 +231,7 @@ size_t RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, size_t len, ubyte
     ubyte* block;
     BigInt bi;
 
-    int blockSize = (int)(((keySize - 1) <= len) ? (keySize - 1) : len);
+    int blockSize = (int)(((keySize - 1) <= (int)len) ? (keySize - 1) : len);
     ubyte preamble = (ubyte)rnd.next(0x01, 0xFF);
     int xteaKey[4];
 
@@ -280,7 +280,7 @@ size_t RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, size_t len, ubyte
 
     delete[] block;
 
-    if (blockSize >= len)
+    if (blockSize >= (int)len)
     {
         result[pos] = 0;
         return pos;
@@ -321,7 +321,7 @@ size_t RSA::decrypt(RSAKeyInfo key, ubyte* data, size_t len, ubyte* result, bool
 
     while (pos < len)
     {
-        int blockSize = (int)((keySize <= (len - pos)) ? keySize : (len - pos));
+        int blockSize = (int)((keySize <= (int)(len - pos)) ? keySize : (len - pos));
         block = new ubyte[blockSize];
 
         for (size_t i = pos; i < pos + blockSize; i++)
@@ -360,7 +360,7 @@ size_t RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, size_t len, ubyte
     ubyte* block;
     int xteaKey[4];
 
-    int blockSize = (int)((keySize <= len) ? keySize : len);
+    int blockSize = (int)((keySize <= (int)len) ? keySize : len);
     block = new ubyte[blockSize];
 
     for (int i = 0; i < blockSize; i++)
@@ -384,7 +384,7 @@ size_t RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, size_t len, ubyte
     }
     delete[] block;
 
-    if (blockSize >= len)
+    if (blockSize >= (int)len)
     {
         result[pos] = 0;
         return pos;
