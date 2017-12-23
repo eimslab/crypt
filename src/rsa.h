@@ -18,6 +18,10 @@ public:
     string privateKey;
     string publicKey;
 
+    RSAKeyPair()
+    {
+    }
+
     RSAKeyPair(string privateKey, string publicKey)
     {
         this->privateKey    = privateKey;
@@ -30,6 +34,10 @@ struct RSAKeyInfo
 public:
     BigInt  modulus;
     BigInt  exponent;
+
+    RSAKeyInfo()
+    {
+    }
 
     RSAKeyInfo(BigInt modulus, BigInt exponent)
     {
