@@ -20,7 +20,9 @@ using namespace cryption::rsa;
 extern "C"
 {
 #endif
-uint DLL_EXPORT rsaKeyGenerate(uint bitLength, char* buf);
+size_t DLL_EXPORT rsaKeyGenerate(int bitLength, char* buf);
+size_t DLL_EXPORT rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode);
+size_t DLL_EXPORT rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode);
 #ifdef __cplusplus
 }
 #endif
@@ -45,6 +47,8 @@ extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason,
 #else
 
 extern "C" size_t rsaKeyGenerate(int bitLength, char* result);
+extern "C" size_t rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode);
+extern "C" size_t rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode);
 
 #endif
 
@@ -62,6 +66,20 @@ size_t rsaKeyGenerate(int bitLength, char* result)
     result[i] = 0;
 
     return key.length();
+}
+
+size_t rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode)
+{
+    string sKey(key, keyLength);
+
+    return RSA::encrypt(sKey, data, len, result, mixinXteaMode);
+}
+
+size_t rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result, bool mixinXteaMode)
+{
+    string sKey(key, keyLength);
+
+    return RSA::decrypt(sKey, data, len, result, mixinXteaMode);
 }
 
 namespace cryption
