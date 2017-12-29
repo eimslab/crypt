@@ -3,7 +3,7 @@
 #include "utils/random.h"
 #include "utils/utility.h"
 #include "base64.h"
-
+#include <iostream>
 using namespace std;
 using namespace cryption::rsa;
 using namespace cryption::base64;
@@ -73,9 +73,10 @@ size_t rsaKeyGenerate(int bitLength, char* result)
 size_t rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result)
 {
     string sKey(key, keyLength);
-    ubyte* buf = new ubyte[len * 2];
+    ubyte* buf = new ubyte[len * 2 + keyLength];
     size_t t_len = RSA::encrypt(sKey, data, len, buf, true);
     string baseStr = cryption::base64::Base64::encode(buf, t_len);
+    delete[] buf;
 
     size_t i = 0;
     ubyte* p = (ubyte*)baseStr.c_str();
@@ -93,9 +94,12 @@ size_t rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* resu
 size_t rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result)
 {
     string sData((char*)data, len);
-    unsigned char* buf = new unsigned char[len];
+    unsigned char* buf = new unsigned char[len * 2];
     size_t t_len = cryption::base64::Base64::decode(sData, buf);
 
     string sKey(key, keyLength);
-    return RSA::decrypt(sKey, buf, t_len, result, true);
+    t_len = RSA::decrypt(sKey, buf, t_len, result, true);
+    delete[] buf;
+
+    return t_len;
 }

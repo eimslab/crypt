@@ -21,7 +21,6 @@ void Base58::init(int* INDEXES, char* ALPHABET)
     }
 }
 
-// Encodes the given bytes as a base58 string (no checksum is appended).
 string Base58::encode(ubyte* data, size_t len)
 {
     if (len == 0)
@@ -33,21 +32,19 @@ string Base58::encode(ubyte* data, size_t len)
     char* ALPHABET = (char*)"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     init(INDEXES, ALPHABET);
 
-    // Count leading zeros.
     int zeros = 0;
     while ((zeros < (int)len) && (data[zeros] == 0))
     {
         ++zeros;
     }
 
-    // Convert base-256 digits to base-58 digits (plus conversion to ASCII characters)
     ubyte* input = new ubyte[len];
-    for (size_t i = 0; i < len; i++) // since we modify it in-place
+    for (size_t i = 0; i < len; i++)
     {
         input[i] = data[i];
     }
 
-    char* encoded = new char[len * 3]; // upper bound
+    char* encoded = new char[len * 3];
     size_t outputStart = len * 3;
 
     for (size_t inputStart = zeros; inputStart < len;)
@@ -56,11 +53,10 @@ string Base58::encode(ubyte* data, size_t len)
 
         if (input[inputStart] == 0)
         {
-            ++inputStart; // optimization - skip leading zeros
+            ++inputStart;
         }
     }
 
-    // Preserve exactly as many leading encoded zeros in output as there were leading zeros in input.
     while (outputStart < len * 3 && encoded[outputStart] == ALPHABET[0])
     {
         ++outputStart;
@@ -71,11 +67,13 @@ string Base58::encode(ubyte* data, size_t len)
         encoded[--outputStart] = ALPHABET[0];
     }
 
-    // Return encoded string (including encoded leading zeros).
-    return string(encoded + outputStart, 0, len * 3 - outputStart);
+    string ret(encoded + outputStart, 0, len * 3 - outputStart);
+    delete[] input;
+    delete[] encoded;
+
+    return ret;
 }
 
-// Decodes the given base58 string into the original data bytes.
 size_t Base58::decode(string const& data, ubyte* result)
 {
     if (data.length() == 0)
@@ -88,7 +86,6 @@ size_t Base58::decode(string const& data, ubyte* result)
     char* ALPHABET = (char*)"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     init(INDEXES, ALPHABET);
 
-    // Convert the base58-encoded ASCII chars to a base58 byte sequence (base58 digits).
     ubyte* input58 = new ubyte[data.length()];
 
     for (size_t i = 0; i < data.length(); ++i)
@@ -98,20 +95,18 @@ size_t Base58::decode(string const& data, ubyte* result)
 
         if (digit < 0)
         {
-            throw;// exception("Illegal character.");
+            throw;
         }
 
         input58[i] = (ubyte)digit;
     }
 
-    // Count leading zeros.
     size_t zeros = 0;
     while (zeros < data.length() && input58[zeros] == 0)
     {
         ++zeros;
     }
 
-    // Convert base-58 digits to base-256 digits.
     ubyte* decoded = new ubyte[data.length()];
     size_t outputStart = data.length();
 
@@ -121,41 +116,40 @@ size_t Base58::decode(string const& data, ubyte* result)
 
         if (input58[inputStart] == 0)
         {
-            ++inputStart; // optimization - skip leading zeros
+            ++inputStart;
         }
     }
 
-    // Ignore extra leading zeroes that were added during the calculation.
     while (outputStart < data.length() && decoded[outputStart] == 0)
     {
         ++outputStart;
     }
 
-    // Return decoded data (including original number of leading zeros).
     for (size_t i = outputStart - zeros; i < data.length(); i++)
     {
         result[i - outputStart - zeros] = decoded[i];
     }
     result[data.length() - outputStart - zeros] = 0;
 
+    delete[] input58;
+    delete[] decoded;
+
     return data.length() - outputStart - zeros;
 }
 
-/*
-Divides a number, represented as an array of bytes each containing a single digit
-in the specified base, by the given divisor. The given number is modified in-place
-to contain the quotient, and the return value is the remainder.
-*/
 BigInt Base58::decodeToBigInteger(string input)
 {
     ubyte* buf = new ubyte[input.length() * 2];
     size_t len = Base58::decode(input, buf);
-    return BigInt(buf, (int)len);
+
+    BigInt bi(buf, (int)len);
+    delete[] buf;
+
+    return bi;
 }
 
 ubyte Base58::divmod(ubyte* number, size_t len, int firstDigit, int base, int divisor)
 {
-    // this is just long division which accounts for the base of the input digits
     int remainder = 0;
 
     for (size_t i = firstDigit; i < len; i++)

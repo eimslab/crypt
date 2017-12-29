@@ -37,6 +37,9 @@
 //        cout << (int)de[i] << ", ";
 //    }
 //
+//    delete[] en;
+//    delete[] de;
+//
 //    return 0;
 //}
 
@@ -62,6 +65,9 @@
 //        cout << (int)de[i] << ", ";
 //    }
 //
+//    delete[] en;
+//    delete[] de;
+//
 //    return 0;
 //}
 
@@ -86,6 +92,9 @@
 //    {
 //        cout << (int)de[i] << endl;
 //    }
+//
+//    delete[] en;
+//    delete[] de;
 //
 //    return 0;
 //}
@@ -122,6 +131,9 @@
 //
 //    string ret((char*)buf2);
 //    cout << ret;
+//
+//    delete[] buf;
+//    delete[] buf2;
 //
 //    return 0;
 //}
