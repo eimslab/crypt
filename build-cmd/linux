@@ -8,6 +8,7 @@ g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/utils/bigi
 g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/tea/xtea.d" -MT"src/tea/xtea.o" -o "src/tea/xtea.o" "../src/tea/xtea.cpp"
 g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/base58.d" -MT"src/base58.o" -o "src/base58.o" "../src/base58.cpp"
 g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/base64.d" -MT"src/base64.o" -o "src/base64.o" "../src/base64.cpp"
+g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/export.d" -MT"src/export.o" -o "src/export.o" "../src/export.cpp"
 g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/md5.d" -MT"src/md5.o" -o "src/md5.o" "../src/md5.cpp"
 g++ -std=c++11 -fPIC -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/rsa.d" -MT"src/rsa.o" -o "src/rsa.o" "../src/rsa.cpp"
-g++ -shared -o "libcrypt.so"  ./src/utils/bigint.o  ./src/tea/xtea.o  ./src/base58.o  ./src/base64.o  ./src/md5.o  ./src/rsa.o
+g++ -shared -o "libcrypt.so"  ./src/utils/bigint.o  ./src/tea/xtea.o  ./src/base58.o  ./src/base64.o  ./src/export.o  ./src/md5.o  ./src/rsa.o
