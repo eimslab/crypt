@@ -67,7 +67,7 @@ string Base58::encode(ubyte* data, size_t len)
         encoded[--outputStart] = ALPHABET[0];
     }
 
-    string ret(encoded + outputStart, 0, len * 3 - outputStart);
+    string ret(encoded + outputStart, len * 3 - outputStart);
     delete[] input;
     delete[] encoded;
 

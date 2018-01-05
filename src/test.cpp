@@ -110,7 +110,7 @@
 //    p = new ubyte[data.length() * 2];
 //    size_t len = Base58::decode(ret, p);
 //
-//    cout << string((char*)p, 0, len);
+//    cout << string((char*)p, len);
 //    return 0;
 //}
 
