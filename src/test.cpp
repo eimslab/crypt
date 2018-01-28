@@ -122,7 +122,7 @@
 //
 //    string data = "Copyright: Copyright Digital Mars 2007 - 2011.License:   $(HTTP www.boost.org/LICENSE_1_0.txt, Boost License 1.0).";
 //
-//    ubyte* buf = new ubyte[data.length() * 2];
+//    ubyte* buf = new ubyte[data.length() * 2 + 256]; // 256 is key size.
 //    ubyte* p = (ubyte*)data.c_str();
 //    size_t len = RSA::encrypt(keyPair.privateKey, p, strlen((char*)p), buf);
 //
