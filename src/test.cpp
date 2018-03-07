@@ -129,7 +129,7 @@
 //    ubyte* buf2 = new ubyte[data.length() * 2];
 //    len = RSA::decrypt(keyPair.publicKey, buf, len, buf2);
 //
-//    string ret((char*)buf2);
+//    string ret((char*)buf2, len);
 //    cout << ret;
 //
 //    delete[] buf;

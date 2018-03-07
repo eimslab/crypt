@@ -119,7 +119,6 @@ long rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result
     }
 
     string sKey(key, keyLength);
-    t_len = 0;
 
     try
     {
