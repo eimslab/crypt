@@ -22,8 +22,8 @@ extern "C"
 #endif
 
 size_t DLL_EXPORT rsaKeyGenerate(int bitLength, char* buf);
-size_t DLL_EXPORT rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result);
-size_t DLL_EXPORT rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result);
+long   DLL_EXPORT rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result);
+long   DLL_EXPORT rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result);
 
 #ifdef __cplusplus
 }
@@ -49,8 +49,8 @@ extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason,
 #else
 
 extern "C" size_t rsaKeyGenerate(int bitLength, char* result);
-extern "C" size_t rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result);
-extern "C" size_t rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result);
+extern "C" long   rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result);
+extern "C" long   rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result);
 
 #endif
 
@@ -70,11 +70,22 @@ size_t rsaKeyGenerate(int bitLength, char* result)
     return key.length();
 }
 
-size_t rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result)
+long rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result)
 {
     string sKey(key, keyLength);
     ubyte* buf = new ubyte[len * 2 + keyLength];
-    size_t t_len = RSA::encrypt(sKey, data, len, buf, true);
+    size_t t_len = 0;
+
+    try
+    {
+        t_len = RSA::encrypt(sKey, data, len, buf, true);
+    }
+    catch (...)
+    {
+        delete[] buf;
+        return -1;
+    }
+
     string baseStr = cryption::base64::Base64::encode(buf, t_len);
     delete[] buf;
 
@@ -88,18 +99,39 @@ size_t rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* resu
     }
     result[i] = 0;
 
-    return baseStr.size();
+    return (long)baseStr.size();
 }
 
-size_t rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result)
+long rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result)
 {
     string sData((char*)data, len);
     unsigned char* buf = new unsigned char[len * 2];
-    size_t t_len = cryption::base64::Base64::decode(sData, buf);
+    size_t t_len = 0;
+
+    try
+    {
+        t_len = cryption::base64::Base64::decode(sData, buf);
+    }
+    catch (...)
+    {
+        delete[] buf;
+        return -1;
+    }
 
     string sKey(key, keyLength);
-    t_len = RSA::decrypt(sKey, buf, t_len, result, true);
+    t_len = 0;
+
+    try
+    {
+        t_len = RSA::decrypt(sKey, buf, t_len, result, true);
+    }
+    catch (...)
+    {
+        delete[] buf;
+        return -2;
+    }
+
     delete[] buf;
 
-    return t_len;
+    return (long)t_len;
 }
