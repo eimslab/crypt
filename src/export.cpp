@@ -5,8 +5,8 @@
 #include "base64.h"
 #include <iostream>
 using namespace std;
-using namespace cryption::rsa;
-using namespace cryption::base64;
+using namespace crypto::rsa;
+using namespace crypto::base64;
 
 #ifdef _WIN32
 
@@ -86,7 +86,7 @@ long rsaEncrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result
         return -1;
     }
 
-    string baseStr = cryption::base64::Base64::encode(buf, t_len);
+    string baseStr = crypto::base64::Base64::encode(buf, t_len);
     delete[] buf;
 
     size_t i = 0;
@@ -110,7 +110,7 @@ long rsaDecrypt(char* key, int keyLength, ubyte* data, size_t len, ubyte* result
 
     try
     {
-        t_len = cryption::base64::Base64::decode(sData, buf);
+        t_len = crypto::base64::Base64::decode(sData, buf);
     }
     catch (...)
     {

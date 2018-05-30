@@ -6,9 +6,9 @@
 #include "utils/utility.h"
 #include "base64.h"
 
-using namespace cryption::rsa;
+using namespace crypto::rsa;
 
-namespace cryption
+namespace crypto
 {
 namespace rsa
 {
@@ -55,7 +55,7 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent)
         buffer[i + 4 + m_len] = e_bytes[i];
     }
 
-    string ret = cryption::base64::Base64::encode(buffer, 4 + m_len + e_len);
+    string ret = crypto::base64::Base64::encode(buffer, 4 + m_len + e_len);
     delete[] m_bytes;
     delete[] e_bytes;
     delete[] buffer;
@@ -66,7 +66,7 @@ string RSA::encodeKey(BigInt modulus, BigInt exponent)
 RSAKeyInfo RSA::decodeKey(string const& key)
 {
     ubyte* buffer = new ubyte[key.size()];
-    size_t size = cryption::base64::Base64::decode(key, buffer);
+    size_t size = crypto::base64::Base64::decode(key, buffer);
     int m_len = Utility::readIntFromBytes<int>(buffer, ENDIAN_BIG);
 
     ubyte* m_bytes = new ubyte[m_len];
@@ -231,7 +231,7 @@ size_t RSA::encrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, size_t len, ubyte
     }
 
     block = new ubyte[len - blockSize + 12];
-    size_t remainder_len = cryption::tea::xtea::XTEAUtils::encrypt(data + blockSize, len - blockSize, xteaKey, block);
+    size_t remainder_len = crypto::tea::xtea::XTEAUtils::encrypt(data + blockSize, len - blockSize, xteaKey, block);
     for (size_t i = 0; i < remainder_len; i++)
     {
         result[pos++] = block[i];
@@ -335,7 +335,7 @@ size_t RSA::decrypt_mixinXteaMode(RSAKeyInfo key, ubyte* data, size_t len, ubyte
     }
 
     block = new ubyte[len - blockSize];
-    size_t remainder_len = cryption::tea::xtea::XTEAUtils::decrypt(data + blockSize, len - blockSize, xteaKey, block);
+    size_t remainder_len = crypto::tea::xtea::XTEAUtils::decrypt(data + blockSize, len - blockSize, xteaKey, block);
 
     for (size_t i = 0; i < remainder_len; i++)
     {

@@ -2,7 +2,7 @@
 
 #include "types.h"
 
-namespace cryption
+namespace crypto
 {
 namespace utils
 {

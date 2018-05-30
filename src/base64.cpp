@@ -2,7 +2,7 @@
 
 #include "base64.h"
 
-namespace cryption
+namespace crypto
 {
 namespace base64
 {

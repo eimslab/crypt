@@ -5,7 +5,7 @@
 #include "../utils/types.h"
 #include "../utils/utility.h"
 
-namespace cryption
+namespace crypto
 {
 namespace tea
 {

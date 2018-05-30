@@ -1,6 +1,6 @@
 #include "md5.h"
 
-namespace cryption
+namespace crypto
 {
 
 #define GET_UINT32(n, b, i)                                     \

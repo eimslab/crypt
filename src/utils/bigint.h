@@ -3,7 +3,7 @@
 #include "types.h"
 #include "random.h"
 
-namespace cryption
+namespace crypto
 {
 namespace utils
 {

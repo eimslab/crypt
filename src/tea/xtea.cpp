@@ -2,9 +2,9 @@
 
 #include "xtea.h"
 
-using namespace cryption::utils;
+using namespace crypto::utils;
 
-namespace cryption
+namespace crypto
 {
 namespace tea
 {

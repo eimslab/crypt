@@ -3,7 +3,7 @@
 
 #include "base58.h"
 
-namespace cryption
+namespace crypto
 {
 namespace base58
 {

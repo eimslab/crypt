@@ -4,9 +4,9 @@
 #include "utils/bigint.h"
 
 using namespace std;
-using namespace cryption::utils;
+using namespace crypto::utils;
 
-namespace cryption
+namespace crypto
 {
 namespace base58
 {

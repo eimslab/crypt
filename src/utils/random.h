@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace cryption
+namespace crypto
 {
 namespace utils
 {

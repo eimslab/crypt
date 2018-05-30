@@ -7,9 +7,9 @@
 #include "utils/utility.h"
 
 using namespace std;
-using namespace cryption::utils;
+using namespace crypto::utils;
 
-namespace cryption
+namespace crypto
 {
 namespace aes
 {
